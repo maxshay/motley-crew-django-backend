@@ -16,7 +16,15 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 
+from django.http import HttpResponse
+
+
+def main(request):
+  return HttpResponse('<h2>main home</h2><br /><a href="/users/">go to users</a>')
+
 urlpatterns = [
+    path('', main),
+
     path('admin/', admin.site.urls),
     path('users/', include('users.urls')),
 ]

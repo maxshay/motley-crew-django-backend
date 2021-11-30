@@ -24,8 +24,8 @@ SECRET_KEY = 'django-insecure-l@d@s%g9e#!jvh^(io%9v3f&aanx@yl7i5b55**f&#7*z%%00-
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv('DEV_ENV') == 'dev'
-
-ALLOWED_HOSTS = ["motley-crew-backend-django-dev.herokuapp.com"]
+# DEBUG = True
+ALLOWED_HOSTS = ['127.0.0.1', 'motley-crew-backend-django-dev.herokuapp.com']
 
 
 # Application definition

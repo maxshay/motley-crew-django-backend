@@ -10,7 +10,6 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 import os
-import mimetypes
 from pathlib import Path
 from dotenv import load_dotenv
 
@@ -30,7 +29,6 @@ SECRET_KEY = secret_key
 
 # SECURITY WARNING: don't run with debug turned on in production!
 dev_env = os.getenv('DEV_ENV')
-print(dev_env)
 if dev_env is None:
   raise KeyError(f'DEV_ENV env var does not exist')
 DEBUG = dev_env == 'dev'
@@ -85,14 +83,31 @@ WSGI_APPLICATION = 'motleycrew_backend.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
-database_url = os.getenv('DATABASE_URL')
-if secret_key is None:
-  raise KeyError(f'DATABASE_URL env var does not exist')
+postgresdb_name = os.getenv('POSTGRES_NAME')
+postgresdb_host = os.getenv('POSTGRES_HOST')
+postgresdb_user = os.getenv('POSTGRES_USER')
+postgresdb_pass = os.getenv('POSTGRES_PASSWORD')
+postgresdb_port = os.getenv('POSTGRES_PORT')
+
+if postgresdb_name is None:
+  raise KeyError(f'POSTGRES_NAME env var does not exist')
+if postgresdb_host is None:
+  raise KeyError(f'POSTGRES_HOST env var does not exist')
+if postgresdb_user is None:
+  raise KeyError(f'POSTGRES_USER env var does not exist')
+if postgresdb_pass is None:
+  raise KeyError(f'POSTGRES_PASSWORD env var does not exist')
+if postgresdb_port is None:
+  raise KeyError(f'POSTGRES_PORT env var does not exist')
 
 DATABASES = {
   'default': {
-    'ENGINE': 'django.db.backends.sqlite3',
-    'NAME': BASE_DIR / 'db.sqlite3',
+    'ENGINE': 'django.db.backends.postgresql',
+    'NAME': postgresdb_name,
+    'HOST': postgresdb_host,
+    'USER': postgresdb_user,
+    'PASSWORD': postgresdb_pass,
+    'PORT': postgresdb_port,
   }
 }
 

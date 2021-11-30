@@ -1,1 +1,1 @@
-web: gunicorn -w 4 -k uvicorn.workers.UvicornWorker motleycrew_backend.wsgi
+web: gunicorn motleycrew_backend.wsgi -k uvicorn.workers.UvicornWorker 

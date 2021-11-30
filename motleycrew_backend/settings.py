@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/3.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
-
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -23,9 +23,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-l@d@s%g9e#!jvh^(io%9v3f&aanx@yl7i5b55**f&#7*z%%00-'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.getenv('DEV_ENV') == 'dev'
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["motley-crew-backend-django-dev.herokuapp.com"]
 
 
 # Application definition

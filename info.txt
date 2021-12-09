@@ -1,0 +1,15 @@
+run app (dev);
+  python manage.py runserver
+
+make migrations:
+  python manage.py makemigrations
+
+run migrations:
+  python manage.py migrate
+
+reset all data:
+  python manage.py migrate admin zero;
+  python manage.py migrate auth zero;
+  python manage.py migrate contenttypes zero;
+  python manage.py migrate sessions zero;
+

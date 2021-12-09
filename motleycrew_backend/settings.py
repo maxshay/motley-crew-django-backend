@@ -35,9 +35,7 @@ DEBUG = dev_env == 'dev'
 # DEBUG = True
 ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'motley-crew-backend-django-dev.herokuapp.com']
 
-
 # Application definition
-
 INSTALLED_APPS = [
   'django.contrib.admin',
   'django.contrib.auth',
@@ -45,8 +43,8 @@ INSTALLED_APPS = [
   'django.contrib.sessions',
   'django.contrib.messages',
   'django.contrib.staticfiles',
+  'rest_framework',
   'users',
-  'user_auth',
 ]
 
 MIDDLEWARE = [
@@ -128,6 +126,8 @@ AUTH_PASSWORD_VALIDATORS = [
     'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
   },
 ]
+
+AUTH_USER_MODEL = 'users.User'
 
 
 # Internationalization

@@ -1,13 +1,3 @@
-from django.shortcuts import render
+from rest_framework.views import APIView
 
-def home(request):
-  return render(request, "users/index.html")
-
-
-def contact(request):
-  return render(request, "users/contact.html")
-
-
-def about(request):
-  return render(request, "users/about.html")
-
+# https://www.youtube.com/watch?v=NFHiT4ncPD8

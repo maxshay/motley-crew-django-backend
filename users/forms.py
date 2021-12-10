@@ -2,15 +2,16 @@ from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from .models import User
 from django import forms
 
+# TODO: add username to user create form
+
+# new fields for add user do not work
 class UserAdminCreationForm(UserCreationForm):
-  extra_field = forms.CharField(required=True)
   class Meta:
     model = User
-    fields = ('username' , 'extra_field', 'email', 'is_active')
+    fields = ('email',)
 
 
 class UserAdminChangeForm(UserChangeForm):
-
   class Meta:
     model = User
-    fields = ('email', 'username')
+    fields = ('email', 'username', 'is_staff', 'is_active')

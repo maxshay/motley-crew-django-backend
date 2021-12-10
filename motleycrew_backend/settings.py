@@ -33,7 +33,7 @@ if dev_env is None:
   raise KeyError(f'DEV_ENV env var does not exist')
 DEBUG = dev_env == 'dev'
 # DEBUG = True
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'motley-crew-backend-django-dev.herokuapp.com']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'motley-crew-backend-django-dev.herokuapp.com', 'mcbackenddev.herokuapp.com']
 
 # Application definition
 INSTALLED_APPS = [

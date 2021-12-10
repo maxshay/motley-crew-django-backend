@@ -13,3 +13,5 @@ reset all data:
   python manage.py migrate contenttypes zero;
   python manage.py migrate sessions zero;
 
+resources:
+  https://devcenter.heroku.com/articles/renaming-apps#updating-git-remotes

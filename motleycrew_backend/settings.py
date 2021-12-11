@@ -119,14 +119,11 @@ CACHES = {
     'LOCATION': redis_url,
     'OPTIONS': {
       'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+      'CONNECTION_POOL_KWARGS': {'ssl_cert_reqs': None}
     },
     'KEY_PREFIX': 'mc'
   }
 }
-
-if dev_env == 'dev':
-  CACHES['default']['OPTIONS']['CONNECTION_POOL_KWARGS'] = {'ssl_cert_reqs': None}
-
 
 
 SESSION_ENGINE = 'django.contrib.sessions.backends.cached_db'

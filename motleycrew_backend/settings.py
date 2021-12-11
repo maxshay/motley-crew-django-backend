@@ -33,7 +33,7 @@ if dev_env is None:
   raise KeyError(f'DEV_ENV env var does not exist')
 DEBUG = dev_env == 'dev'
 # DEBUG = True
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'motley-crew-backend-django-dev.herokuapp.com', 'mcbackenddev.herokuapp.com']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'mcbackenddev.herokuapp.com']
 
 # Application definition
 INSTALLED_APPS = [
@@ -128,7 +128,9 @@ CACHES = {
 
 SESSION_ENGINE = 'django.contrib.sessions.backends.cached_db'
 SESSION_CACHE_ALIAS = "default"
-
+# CSRF_COOKIE_SECURE = True
+# SESSION_COOKIE_SECURE = True
+CSRF_TRUSTED_ORIGINS = ['localhost', '127.0.0.1', 'mcbackenddev.herokuapp.com']
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators

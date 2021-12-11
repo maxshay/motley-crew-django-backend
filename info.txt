@@ -13,5 +13,10 @@ reset all data:
   python manage.py migrate contenttypes zero;
   python manage.py migrate sessions zero;
 
+heroku redis cli:
+  heroku redis:cli -a mcbackenddev --confirm mcbackenddev
+
 resources:
   https://devcenter.heroku.com/articles/renaming-apps#updating-git-remotes
+  https://testdriven.io/blog/django-custom-user-model/
+  https://www.codingforentrepreneurs.com/blog/how-to-create-a-custom-django-user-model

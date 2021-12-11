@@ -109,6 +109,30 @@ DATABASES = {
   }
 }
 
+redis_url = os.getenv('REDIS_TLS_URL')
+if redis_url is None:
+  raise KeyError(f'REDIS_TLS_URL env var does not exist')
+
+CACHES = {
+  'default': {
+    'BACKEND': 'django_redis.cache.RedisCache',
+    'LOCATION': redis_url,
+    'OPTIONS': {
+      'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+    },
+    'KEY_PREFIX': 'mc'
+  }
+}
+
+if dev_env == 'dev':
+  CACHES['default']['OPTIONS']['CONNECTION_POOL_KWARGS'] = {'ssl_cert_reqs': None}
+
+
+
+SESSION_ENGINE = 'django.contrib.sessions.backends.cached_db'
+SESSION_CACHE_ALIAS = "default"
+
+
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
 

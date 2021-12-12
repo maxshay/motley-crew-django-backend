@@ -135,6 +135,8 @@ CACHES = {
 
 SESSION_ENGINE = 'django.contrib.sessions.backends.cached_db'
 SESSION_CACHE_ALIAS = "default"
+SESSION_EXPIRE_AT_BROWSER_CLOSE = False
+SESSION_COOKIE_AGE = 1 * 60 * 60 * 24 # 1 day
 
 
 # Password validation

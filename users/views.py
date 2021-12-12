@@ -5,16 +5,11 @@ from .models import User
 from django.views.decorators.csrf import ensure_csrf_cookie, csrf_protect, csrf_exempt
 from django.utils.decorators import method_decorator
 from django.contrib import auth
-
-
 from .serializers import UserSerializer
 
 # https://www.youtube.com/watch?v=NFHiT4ncPD8
 
-
-
-
-@csrf_exempt
+@method_decorator(csrf_exempt, name='dispatch')
 class CheckAuthenticatedView(APIView):
   def get(self, request, format=None):
     isAuthenticated = User.is_authenticated
@@ -25,7 +20,7 @@ class CheckAuthenticatedView(APIView):
       return Response({'error': False, 'message': {'authenticated': False}})
 
 
-@csrf_exempt
+@method_decorator(csrf_exempt, name='dispatch')
 class LogInView(APIView):
   permission_classes = (permissions.AllowAny,)
   def post(self, request, format=None):
@@ -52,7 +47,7 @@ class LogInView(APIView):
       return Response({'error': False, 'message': 'login success', 'data': {'username': username}})
 
 
-@csrf_exempt
+@method_decorator(csrf_exempt, name='dispatch')
 class LogOutView(APIView):
   def post(self, request, format=None):
     try:
@@ -62,7 +57,7 @@ class LogOutView(APIView):
       return Response({'error': True, 'message': 'user could not be logged out'})
 
 
-@csrf_exempt
+@method_decorator(csrf_exempt, name='dispatch')
 class UserInfoView(APIView):
   def get(self, request, format=None):
     user = self.request.user

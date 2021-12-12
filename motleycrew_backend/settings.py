@@ -43,6 +43,7 @@ INSTALLED_APPS = [
   'django.contrib.sessions',
   'django.contrib.messages',
   'django.contrib.staticfiles',
+  'corsheaders',
   'rest_framework',
   'users',
 ]
@@ -50,6 +51,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
   'django.middleware.security.SecurityMiddleware',
   'django.contrib.sessions.middleware.SessionMiddleware',
+  'corsheaders.middleware.CorsMiddleware',
   'django.middleware.common.CommonMiddleware',
   'django.middleware.csrf.CsrfViewMiddleware',
   'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -57,6 +59,8 @@ MIDDLEWARE = [
   'django.middleware.clickjacking.XFrameOptionsMiddleware',
   'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
+
+CORS_ALLOWED_ORIGINS = ['localhost', '127.0.0.1', 'motleycrewdev.com']
 
 ROOT_URLCONF = 'motleycrew_backend.urls'
 

@@ -128,7 +128,8 @@ CACHES = {
 
 SESSION_ENGINE = 'django.contrib.sessions.backends.cached_db'
 SESSION_CACHE_ALIAS = "default"
-CSRF_TRUSTED_ORIGINS = ['localhost', '127.0.0.1', 'mcbackenddev.herokuapp.com']
+# CSRF_TRUSTED_ORIGINS = ['localhost', '127.0.0.1', 'mcbackenddev.herokuapp.com']
+CSRF_TRUSTED_ORIGINS = ['*']
 
 if dev_env == 'prod':
   SECURE_BROWSER_XSS_FILTER = True

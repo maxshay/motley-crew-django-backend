@@ -25,10 +25,11 @@ resources:
 
 curl https://mcbackenddev.herokuapp.com/api/csrf_cookie
 
-curl
--X POST
--d "{}"
---referer https://google.com?q=cats
---cookie "csrftoken=6JBK6rSnTSt23Grjv3JHUwFoDJqa61AsFAeElgsBUYiNqurEKVZcIj5PebKxkJUI"
-https://mcbackenddev.herokuapp.com/api/auth/login
---header "X-CSRFToken: 6JBK6rSnTSt23Grjv3JHUwFoDJqa61AsFAeElgsBUYiNqurEKVZcIj5PebKxkJUI"
+curl \
+-X POST \
+-d "{}" \
+--referer 127.0.0.1 \
+--cookie "csrftoken=AFFh26POEMMWZXlra7Nki5gGONNf9ooxWRLosURqf9AU3rxXhetjbMxvpC3jHFmT" \
+https://mcbackenddev.herokuapp.com/api/auth/login \
+--header "X-CSRFToken: AFFh26POEMMWZXlra7Nki5gGONNf9ooxWRLosURqf9AU3rxXhetjbMxvpC3jHFmT" \
+--header "Content-type: application/json"

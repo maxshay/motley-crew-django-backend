@@ -20,3 +20,15 @@ resources:
   https://devcenter.heroku.com/articles/renaming-apps#updating-git-remotes
   https://testdriven.io/blog/django-custom-user-model/
   https://www.codingforentrepreneurs.com/blog/how-to-create-a-custom-django-user-model
+
+
+
+curl https://mcbackenddev.herokuapp.com/api/csrf_cookie
+
+curl
+-X POST
+-d "{}"
+--referer https://google.com?q=cats
+--cookie "csrftoken=6JBK6rSnTSt23Grjv3JHUwFoDJqa61AsFAeElgsBUYiNqurEKVZcIj5PebKxkJUI"
+https://mcbackenddev.herokuapp.com/api/auth/login
+--header "X-CSRFToken: 6JBK6rSnTSt23Grjv3JHUwFoDJqa61AsFAeElgsBUYiNqurEKVZcIj5PebKxkJUI"

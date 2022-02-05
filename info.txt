@@ -1,3 +1,7 @@
+activate virtual env:
+  .\venv\Scripts\activate
+  source venv/bin/activate
+
 run app (dev);
   python manage.py runserver
 
@@ -20,6 +24,8 @@ resources:
   https://devcenter.heroku.com/articles/renaming-apps#updating-git-remotes
   https://testdriven.io/blog/django-custom-user-model/
   https://www.codingforentrepreneurs.com/blog/how-to-create-a-custom-django-user-model
+  https://stackoverflow.com/questions/9736548/database-schema-how-the-relationship-can-be-designed-between-user-file-and-fol
+  https://docs.djangoproject.com/en/4.0/ref/models/fields/
 
 
 

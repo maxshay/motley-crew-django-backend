@@ -8,3 +8,6 @@ class Folder(models.Model):
 
   # belongs to User
   user = models.ForeignKey(User, on_delete=models.CASCADE)
+
+  class Meta:
+    unique_together = ('user', 'name')

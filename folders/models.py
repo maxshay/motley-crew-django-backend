@@ -1,20 +1,10 @@
 from django.db import models
+from users.models import User
 
-# Create your models here.
-
-
-# class User():
-  # id:
-  # first_name:
-  # last_name:
-  # ...
-
-  # has one or many folders
-
-# class Folder():
+class Folder(models.Model):
   name = models.CharField(max_length=255)
   # type?
   # shared?
 
-
   # belongs to User
+  user = models.ForeignKey(User, on_delete=models.CASCADE)

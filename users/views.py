@@ -41,7 +41,7 @@ class LogInView(APIView):
     user = auth.authenticate(username=username, password=password)
 
     if user is None:
-      return Response({'error': True, 'message': 'username or password is incorrect'})
+      return Response({'error': True, 'message': 'username or password is incorrect'}, status=400)
     else:
       auth.login(request, user)
       return Response({'error': False, 'message': 'login success', 'data': {'username': username}})
@@ -59,6 +59,9 @@ class LogOutView(APIView):
 
 @method_decorator(csrf_exempt, name='dispatch')
 class UserInfoView(APIView):
+  # permission_classes = (permissions.IsAuthenticated,)
+
+
   def get(self, request, format=None):
     user = self.request.user
 

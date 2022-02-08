@@ -46,6 +46,8 @@ INSTALLED_APPS = [
   'corsheaders',
   'rest_framework',
   'users',
+  'folders',
+  'files',
 ]
 
 MIDDLEWARE = [

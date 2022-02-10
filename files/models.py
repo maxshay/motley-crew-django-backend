@@ -31,7 +31,7 @@ from users.models import User
 class File(models.Model):
   name = models.CharField(max_length=255)
   # parent folder
-  # url
+  # url = models
 
   # belongs to: Folder
   parent_folder = models.ForeignKey(Folder, on_delete=models.CASCADE)

@@ -36,6 +36,9 @@ class File(APIView):
   def delete(self, request, id, format=None):
     pass
 
+  def put(self, request, id, format=None):
+    pass
+
 
 @method_decorator(csrf_exempt, name='dispatch')
 class Files(APIView):
@@ -60,6 +63,8 @@ class Files(APIView):
 
     return Response({'error': False, 'data': folders_data})
 
+  def delete(self, request, format=None):
+    pass
 
 
 @method_decorator(csrf_exempt, name='dispatch')

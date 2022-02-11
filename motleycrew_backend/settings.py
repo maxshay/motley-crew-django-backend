@@ -62,7 +62,7 @@ MIDDLEWARE = [
   'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
 
-CORS_ALLOWED_ORIGINS = ['http://localhost', 'http://127.0.0.1', 'https://motleycrewdev.com']
+CORS_ALLOWED_ORIGINS = ['http://localhost', 'http://127.0.0.1', 'https://motleycrewdev.com', '*']
 
 ROOT_URLCONF = 'motleycrew_backend.urls'
 

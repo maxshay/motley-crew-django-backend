@@ -24,7 +24,7 @@ class CheckAuthenticatedView(APIView):
 class LogInView(APIView):
   permission_classes = (permissions.AllowAny,)
   def post(self, request, format=None):
-    data = self.request.data
+    data = request.data
 
     missing = []
     if 'username' not in data:
@@ -37,7 +37,6 @@ class LogInView(APIView):
     
     username = data['username']
     password = data['password']
-
     user = auth.authenticate(username=username, password=password)
 
     if user is None:
@@ -59,29 +58,13 @@ class LogOutView(APIView):
 
 @method_decorator(csrf_exempt, name='dispatch')
 class UserInfoView(APIView):
-  # permission_classes = (permissions.IsAuthenticated,)
-
-
+  permission_classes = (permissions.IsAuthenticated,)
   def get(self, request, format=None):
-    user = self.request.user
-
-    print(user)
-
+    user = request.user
     user = User.objects.get(id=user.id)
-
     user_info = UserSerializer(user)
 
     return Response({'error': False, 'data': user_info.data})
-
-
-
-class UserTest(APIView):
-  # permission_classes = (permissions.IsAuthenticated,)
-
-
-  def get(self, request, format=None):
-
-    return Response({'error': False, 'data': "Hello world"})
 
 
 @method_decorator(ensure_csrf_cookie, name='dispatch')

@@ -31,8 +31,9 @@ SECRET_KEY = secret_key
 dev_env = os.getenv('DEV_ENV')
 if dev_env is None:
   raise KeyError(f'DEV_ENV env var does not exist')
+
 DEBUG = dev_env == 'dev'
-# DEBUG = True
+
 ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'mcbackenddev.herokuapp.com']
 
 # Application definition
@@ -51,9 +52,9 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
-  'corsheaders.middleware.CorsMiddleware',
   'django.middleware.security.SecurityMiddleware',
   'django.contrib.sessions.middleware.SessionMiddleware',
+  'corsheaders.middleware.CorsMiddleware',
   'django.middleware.common.CommonMiddleware',
   'django.middleware.csrf.CsrfViewMiddleware',
   'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -62,8 +63,7 @@ MIDDLEWARE = [
   'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
 
-CORS_ORIGIN_ALLOW_ALL = True   
-# CORS_ALLOWED_ORIGINS = ['http://localhost', 'http://127.0.0.1', 'https://motleycrewdev.com', '*']
+CORS_ALLOWED_ORIGINS = ['http://localhost:3000', 'http://127.0.0.1:3000', 'https://motleycrewdev.com']
 
 ROOT_URLCONF = 'motleycrew_backend.urls'
 
@@ -190,3 +190,4 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+

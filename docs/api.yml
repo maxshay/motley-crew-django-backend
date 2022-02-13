@@ -1,0 +1,96 @@
+# Api Routes
+- /admin (GET): ✅
+    hello: world
+- /api/csrf_cookie (GET): 🚧
+    description: Gets a CSRF Token
+    auth required: No
+    data required: None
+    returns:
+      - json
+      - Cookie w/ csrf token
+- /api/auth/login (POST): ✅
+    description: Log a user in
+    auth required: No
+    data required:
+      json body:
+        values:
+          - username
+          - password
+    returns:
+      - json
+      - Cookie with sessionid
+- /api/auth/logout (POST): ✅
+    description: Log a user out
+    auth required: Yes
+    data required: None
+    returns: json
+- /api/auth/loggedin (GET): ✅
+    description: Check if a user is logged in
+    auth required: No
+    data required: None
+    returns: json
+- /api/profile (GET): ✅
+    description: Get some info of a user
+    auth required: Yes
+    data required: None
+    returns: json
+- /api/folders (GET): ✅
+    description: Gets a list of users folders names
+    auth required: Yes
+    data required: None
+    returns: json
+- /api/folder/create (POST): ✅
+    description: Create an empty folder for user
+    auth required: Yes
+    data required:
+      json body: folderName
+    returns: json
+- /api/folder/<int:id> (GET): 🚧
+- /api/folder/<int:id> (PUT): 🚧
+- /api/folder/<int:id> (DELETE): ✅
+    description: Delete a folder, will delete all files inside
+    auth required: Yes
+    data required: None
+    returns: json
+- /api/files (GET): ✅
+    description: Gets all folder/file information, nested
+    auth required: Yes
+    data required: None
+    returns: json
+- /api/file/create (POST): 🚧
+    description: Creates a file
+    auth required: Yes
+    data required:
+      json body:
+        - fileName
+        - parentFolderId
+    returns: json
+- /api/file/<int:id> (GET): 🚧
+    description: Gets file information
+    auth required: Yes
+    data required: None
+    returns: json
+- /api/file/<int:id> (PUT): 🚧
+    description: Updates a file name
+    auth required: Yes
+    data required:
+      json body:
+        - fileName
+    returns: json
+- /api/file/<int:id> (DELETE): 🚧
+    description: Deletes a file
+    auth required: Yes
+    data required: None
+    returns: json
+
+# Json Response
+Structure:
+  dictionary:
+    error: boolean
+    message: string
+    data (optional):
+      - dictionary
+      - array
+      - null
+      - other
+    details (optional): string

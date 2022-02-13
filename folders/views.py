@@ -13,7 +13,7 @@ from users.models import User
 import logging
 
 @method_decorator(csrf_exempt, name='dispatch')
-class GetAllFolders(APIView):
+class Folders(APIView):
   permission_classes = (permissions.IsAuthenticated,)
     
   def get(self, request, format=None):
@@ -40,7 +40,6 @@ class Folder(APIView):
     if id is None:
       return Response({'error': True, 'message': 'missing or invalid \'id\' from url params'}, status=400)
     
-
     try:
       f = FolderModel.objects.filter(id=id).first()
       if f is None:

@@ -1,9 +1,9 @@
 from django.urls import path
-from .views import GetAllFolders, CreateFolder, Folder
+from .views import Folders, CreateFolder, Folder
 
 
 urlpatterns = [
-  path('folders', GetAllFolders.as_view()),
+  path('folders', Folders.as_view()),
   path('folder/create', CreateFolder.as_view()),
   path('folder/<int:id>', Folder.as_view())
 ]

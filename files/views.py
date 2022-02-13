@@ -44,15 +44,31 @@ class File(APIView):
       f_ser = FileSerializer(f)
       f_temp = f_ser.data
       f_temp['id'] = f_id
-      return Response({'error': False, 'message': 'folder deleted', 'data': f_temp})
+      return Response({'error': False, 'message': 'file deleted', 'data': f_temp})
     except Exception as e:
       print(e)
-      print('cannot delete file')
       return Response({'error': True, 'message': 'file cannot be deleted', 'details': e})
 
 
+  # for now we only update the filename
   def put(self, request, id, format=None):
-    pass
+    file_name = request.data.get('fileName')
+
+    if file_name is None: # add additional file name validations
+      return Response({'error': True, 'message': 'missing \'fileName\' from request body'}, status=400)
+
+    try:
+      f = FileModel.objects.filter(id=id, owner=user.id).first()
+      if f is None:
+        return Response({'error': True, 'message': f'file {id} not found', 'data': None}, status=400)
+
+      f.name = file_name # update here
+      f.save()
+      f_ser = FileSerializer(f)
+      return Response({'error': False, 'message': 'file updated', 'data': f_ser.data})
+    except Exception as e:
+      print(e)
+      return Response({'error': True, 'message': 'file cannot be updated', 'details': e})
 
 
 @method_decorator(csrf_exempt, name='dispatch')
@@ -89,11 +105,12 @@ class CreateFile(APIView):
   def post(self, request, format=None):
     user = self.request.user
     data = self.request.data
+
     file_name = data.get('fileName')
     parent_folder_id = data.get('parentFolderId')
 
     if file_name is None or parent_folder_id is None:
-      return Response({'error': True, 'message': 'missing \'folderName\' or \'parentFolderId\' from request body'}, status=400)
+      return Response({'error': True, 'message': 'missing \'fileName\' or \'parentFolderId\' from request body'}, status=400)
 
 
     user = User.objects.get(id=user.id)

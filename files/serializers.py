@@ -2,6 +2,8 @@ from rest_framework import serializers
 from .models import File
 
 class FileSerializer(serializers.ModelSerializer):
+  parentFolder = serializers.IntegerField(source='parent_folder.id')
+
   class Meta:
     model = File
-    fields = '__all__'
+    fields = ('id', 'parentFolder', 'name', 'owner',)

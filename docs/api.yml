@@ -83,14 +83,12 @@
     data required: None
     returns: json
 
-# Json Response
-Structure:
-  dictionary:
-    error: boolean
-    message: string
-    data (optional):
-      - dictionary
-      - array
-      - null
-      - other
-    details (optional): string
+# In general, json response looks like:
+dictionary:
+  error: boolean
+  message: string
+  data (optional):
+    - dictionary
+    - array
+    - null
+  details (optional): string

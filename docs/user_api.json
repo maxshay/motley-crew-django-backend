@@ -1,0 +1,51 @@
+{
+  "apiRoutes": [
+    {
+      "path": "api/auth/login (POST)",
+      "authRequired": false,
+      "sampleRequessJsonBody": {
+        "username": "someUsername",
+        "password": "abc123"
+      },
+      "sampleResponseData": [
+        {
+          "error": false,
+          "data": {
+            "username": "String"
+          },
+          "message": "login success"
+        },
+        "or",
+        {
+          "error": true,
+          "data": null,
+          "message": "username or password is incorrect"
+        }
+      ]
+    },
+    {
+      "path": "api/auth/logout (POST)",
+      "authRequired": true
+    },
+    {
+      "path": "api/profile (GET)",
+      "authRequired": true,
+      "sampleResponseData": {
+        "error": false,
+        "message": "ok",
+        "data": {
+          "id": "Int",
+          "username": "String",
+          "email": "String",
+          "firstName": "String",
+          "lastName": "String",
+          "dateJoined": "DateTimeString",
+          "lastLogin": "DateTimeString",
+          "isActive": "Boolean",
+          "isStaff": "Boolean",
+          "isSuperuser": "Boolean"
+        }
+      }
+    }
+  ]
+}

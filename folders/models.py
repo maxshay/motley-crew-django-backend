@@ -7,7 +7,7 @@ class Folder(models.Model):
   # shared?
 
   # belongs to User
-  user = models.ForeignKey(User, on_delete=models.CASCADE)
+  owner = models.ForeignKey(User, on_delete=models.CASCADE)
 
   class Meta:
-    unique_together = ('user', 'name')
+    unique_together = ('owner', 'name')

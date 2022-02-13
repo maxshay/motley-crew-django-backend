@@ -7,8 +7,6 @@ from django.utils.decorators import method_decorator
 from django.contrib import auth
 from .serializers import UserSerializer
 
-# https://www.youtube.com/watch?v=NFHiT4ncPD8
-
 @method_decorator(csrf_exempt, name='dispatch')
 class CheckAuthenticatedView(APIView):
   def get(self, request, format=None):

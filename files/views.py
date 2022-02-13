@@ -33,8 +33,23 @@ class File(APIView):
       print('cannot get file')
       return Response({'error': False, 'message': 'cannot get file', 'details': e, 'data': None})
 
+
   def delete(self, request, id, format=None):
-    pass
+    try:
+      f = FileModel.objects.filter(id=id, owner=user.id).first()
+      if f is None:
+        return Response({'error': True, 'message': f'file {id} not found', 'data': None}, status=400)
+      f_id = f.id
+      f.delete()
+      f_ser = FileSerializer(f)
+      f_temp = f_ser.data
+      f_temp['id'] = f_id
+      return Response({'error': False, 'message': 'folder deleted', 'data': f_temp})
+    except Exception as e:
+      print(e)
+      print('cannot delete file')
+      return Response({'error': True, 'message': 'file cannot be deleted', 'details': e})
+
 
   def put(self, request, id, format=None):
     pass

@@ -62,7 +62,7 @@ class UserInfoView(APIView):
     user = User.objects.get(id=user.id)
     user_info = UserSerializer(user)
 
-    return Response({'error': False, 'message: 'ok', 'data': user_info.data})
+    return Response({'error': False, 'message': 'ok', 'data': user_info.data})
 
 
 @method_decorator(ensure_csrf_cookie, name='dispatch')

@@ -22,7 +22,7 @@ class UserAdmin(BaseUserAdmin):
   list_filter = ('is_staff', 'is_active',)
   fieldsets = (
     (None, {'fields': ('email', 'username', 'password')}),
-    ('Personal info', {'fields': ()}),
+    ('Personal info', {'fields': ('first_name', 'last_name')}),
     ('Permissions', {'fields': ('is_staff', 'is_superuser', 'is_active')}),
   )
   # add_fieldsets is not a standard ModelAdmin attribute. UserAdmin
@@ -30,7 +30,7 @@ class UserAdmin(BaseUserAdmin):
   add_fieldsets = (
     (None, {
       'classes': ('wide',),
-      'fields': ('email', 'password1', 'password2', 'is_staff', 'is_active')}
+      'fields': ('first_name', 'last_name', 'email', 'password1', 'password2', 'is_staff', 'is_active')}
     ),
   )
   search_fields = ('email',)

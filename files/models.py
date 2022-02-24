@@ -9,6 +9,7 @@ class File(models.Model):
   name = models.CharField(max_length=255)
   # parent folder
   # url = models
+  # photo = models.FileField()
 
   # belongs to: Folder
   parent_folder = models.ForeignKey(Folder, on_delete=models.CASCADE)

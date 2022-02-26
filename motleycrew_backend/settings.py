@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 import os
+import sys
 from pathlib import Path
 from dotenv import load_dotenv
 
@@ -105,7 +106,8 @@ if postgresdb_pass is None:
 if postgresdb_port is None:
   raise KeyError(f'POSTGRES_PORT env var does not exist')
 
-DATABASES = {
+
+AVAILABLE_DATABAES = {
   'default': {
     'ENGINE': 'django.db.backends.postgresql',
     'NAME': postgresdb_name,
@@ -113,8 +115,22 @@ DATABASES = {
     'USER': postgresdb_user,
     'PASSWORD': postgresdb_pass,
     'PORT': postgresdb_port,
-  }
+  },
+  'testing': {
+    'ENGINE': 'django.db.backends.postgresql',
+    'NAME': 'test',
+    'HOST': 'localhost',
+    'USER': 'test',
+    'PASSWORD': 'test',
+    'PORT': '5432',
+  },
 }
+
+if 'test' in sys.argv:
+  DATABASES = {'default': AVAILABLE_DATABAES['testing']}
+else:
+  DATABASES = {'default': AVAILABLE_DATABAES['default']}
+
 
 redis_url = os.getenv('REDIS_TLS_URL')
 if redis_url is None:

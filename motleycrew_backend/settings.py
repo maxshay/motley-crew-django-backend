@@ -159,6 +159,8 @@ SESSION_EXPIRE_AT_BROWSER_CLOSE = False
 SESSION_COOKIE_AGE = 1 * 60 * 60 * 24 # 1 day
 if dev_env == 'prod':
   SESSION_COOKIE_DOMAIN="mcbackenddev.herokuapp.com"
+  CSRF_COOKIE_DOMAIN = "mcbackenddev.herokuapp.com"
+  CSRF_TRUSTED_ORIGINS = "mcbackenddev.herokuapp.com"
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators

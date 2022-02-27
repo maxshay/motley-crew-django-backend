@@ -12,16 +12,14 @@ class CheckAuthenticatedView(APIView):
   def get(self, request, format=None):
     # isAuthenticated = User.is_authenticated
     ok = request.user.is_authenticated
-
     # print(ok)
-
     if ok:
       return Response({'error': False, 'message': None, 'data': {'authenticated': True}})
     else:
       return Response({'error': False, 'message': None, 'data': {'authenticated': False}})
 
 
-@method_decorator(csrf_exempt, name='dispatch')
+# @method_decorator(csrf_exempt, name='dispatch')
 class LogInView(APIView):
   permission_classes = (permissions.AllowAny,)
   def post(self, request, format=None):
@@ -47,7 +45,7 @@ class LogInView(APIView):
       return Response({'error': False, 'message': 'login success', 'data': {'username': username}})
 
 
-@method_decorator(csrf_exempt, name='dispatch')
+# @method_decorator(csrf_exempt, name='dispatch')
 class LogOutView(APIView):
   def post(self, request, format=None):
     try:
@@ -57,7 +55,7 @@ class LogOutView(APIView):
       return Response({'error': True, 'message': 'user could not be logged out', 'data': None})
 
 
-@method_decorator(csrf_exempt, name='dispatch')
+# @method_decorator(csrf_exempt, name='dispatch')
 class UserInfoView(APIView):
   permission_classes = (permissions.IsAuthenticated,)
   def get(self, request, format=None):

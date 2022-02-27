@@ -66,6 +66,7 @@ MIDDLEWARE = [
 
 CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOWED_ORIGINS = ['http://localhost:3000', 'http://127.0.0.1:3000', 'https://motleycrewdev.com']
+CSRF_TRUSTED_ORIGINS = ['https://*.mydomain.com','https://*.127.0.0.1', 'http://*.127.0.0.1', 'http://localhost', 'http://localhost:3000']
 
 ROOT_URLCONF = 'motleycrew_backend.urls'
 
@@ -157,6 +158,7 @@ SESSION_ENGINE = 'django.contrib.sessions.backends.cached_db'
 SESSION_CACHE_ALIAS = "default"
 SESSION_EXPIRE_AT_BROWSER_CLOSE = False
 SESSION_COOKIE_AGE = 1 * 60 * 60 * 24 # 1 day
+
 if dev_env == 'prod':
   CSRF_COOKIE_SECURE = True
   SESSION_COOKIE_SECURE = True

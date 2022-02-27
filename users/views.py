@@ -10,12 +10,15 @@ from .serializers import UserSerializer
 @method_decorator(csrf_exempt, name='dispatch')
 class CheckAuthenticatedView(APIView):
   def get(self, request, format=None):
-    isAuthenticated = User.is_authenticated
+    # isAuthenticated = User.is_authenticated
+    ok = request.user.is_authenticated
 
-    if isAuthenticated:
-      return Response({'error': False, 'message': {'authenticated': True}, 'data': None})
+    # print(ok)
+
+    if ok:
+      return Response({'error': False, 'message': None, 'data': {'authenticated': True}})
     else:
-      return Response({'error': False, 'message': {'authenticated': False}, 'data': None})
+      return Response({'error': False, 'message': None, 'data': {'authenticated': False}})
 
 
 @method_decorator(csrf_exempt, name='dispatch')

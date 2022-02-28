@@ -20,7 +20,7 @@ class Folders(APIView):
     user = self.request.user
     user = User.objects.get(id=user.id)
 
-    folders = FolderModel.objects.all().filter(user=user.id) # all
+    folders = FolderModel.objects.all().filter(owner=user.id) # all
     folder_info = FolderSerializer(folders, many=True)
     return Response({'error': False, 'data': folder_info.data})
 
@@ -71,7 +71,7 @@ class CreateFolder(APIView):
 
     user = User.objects.get(id=user.id)
     try:
-      f = FolderModel.objects.create(name=folder_name, user=user.id)
+      f = FolderModel.objects.create(name=folder_name, owner=user)
       f_ser = FolderSerializer(f)
       return Response({'error': False, 'message': 'folder created', 'data': f_ser.data})
     except Exception as e:

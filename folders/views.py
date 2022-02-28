@@ -12,7 +12,7 @@ from users.models import User
 # dev
 import logging
 
-@method_decorator(csrf_exempt, name='dispatch')
+
 class Folders(APIView):
   permission_classes = (permissions.IsAuthenticated,)
     
@@ -25,9 +25,6 @@ class Folders(APIView):
     return Response({'error': False, 'data': folder_info.data})
 
 
-
-
-@method_decorator(csrf_exempt, name='dispatch')
 class Folder(APIView):
   permission_classes = (permissions.IsAuthenticated,)
 
@@ -56,7 +53,6 @@ class Folder(APIView):
       return Response({'error': True, 'message': 'folder cannot be deleted', 'details': e})
 
 
-@method_decorator(csrf_exempt, name='dispatch')
 class CreateFolder(APIView):
   permission_classes = (permissions.IsAuthenticated,)
 

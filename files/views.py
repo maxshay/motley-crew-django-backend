@@ -14,7 +14,6 @@ from folders.serializers import FolderSerializer
 
 
 # Create your views here.
-@method_decorator(csrf_exempt, name='dispatch')
 class File(APIView):
   permission_classes = (permissions.IsAuthenticated,)
 
@@ -71,7 +70,6 @@ class File(APIView):
       return Response({'error': True, 'message': 'file cannot be updated', 'details': e})
 
 
-@method_decorator(csrf_exempt, name='dispatch')
 class Files(APIView):
   permission_classes = (permissions.IsAuthenticated,)
 
@@ -98,7 +96,6 @@ class Files(APIView):
     pass
 
 
-@method_decorator(csrf_exempt, name='dispatch')
 class CreateFile(APIView):
   permission_classes = (permissions.IsAuthenticated,)
 

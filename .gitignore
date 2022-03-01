@@ -139,3 +139,5 @@ GitHub.sublime-settings
 # static collected files
 staticfiles
 secrets.txt
+
+.DS_Store

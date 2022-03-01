@@ -111,7 +111,7 @@ class CreateFile(APIView):
 
 
     user = User.objects.get(id=user.id)
-    folder = Folder.objects.filter(id=parent_folder_id, user=user.id)
+    folder = Folder.objects.filter(id=parent_folder_id, owner=user.id)
     try:
       f = FileModel.objects.create(name=file_name, parent_folder=folder.id, owner=user.id)
       f_ser = FileSerializer(f)

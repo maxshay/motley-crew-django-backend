@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 import os
 import sys
+import datetime
 from pathlib import Path
 from dotenv import load_dotenv
 
@@ -64,10 +65,7 @@ MIDDLEWARE = [
   'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
 
-CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOWED_ORIGINS = ['http://localhost:3000', 'http://127.0.0.1:3000', 'https://motleycrewdev.com']
-CSRF_TRUSTED_ORIGINS = ['https://*.127.0.0.1', 'http://*.127.0.0.1', 'http://localhost', 'http://localhost:3000']
-# CORS_EXPOSE_HEADERS = ['Content-Type', 'X-CSRFToken']
 
 ROOT_URLCONF = 'motleycrew_backend.urls'
 
@@ -152,26 +150,22 @@ CACHES = {
 }
 
 
-# https://docs.djangoproject.com/en/4.0/ref/middleware/#referrer-policy
+REST_FRAMEWORK = {
+  'DEFAULT_AUTHENTICATION_CLASSES': [
+    'rest_framework_simplejwt.authentication.JWTAuthentication',
+    'rest_framework.authentication.SessionAuthentication',
+  ]
+}
 
+SIMPLE_JWT = {
+  'ACCESS_TOKEN_LIFETIME': datetime.timedelta(minutes=30),
+  'REFRESH_TOKEN_LIFETIME': datetime.timedelta(days=1),
+  'USER_ID_CLAIM': 'id',
+}
 
-SESSION_ENGINE = 'django.contrib.sessions.backends.cached_db'
-SESSION_CACHE_ALIAS = "default"
-SESSION_EXPIRE_AT_BROWSER_CLOSE = False
-SESSION_COOKIE_AGE = 1 * 60 * 60 * 24 # 1 day
-
-CSRF_COOKIE_SAMESITE = 'None'
-SESSION_COOKIE_SAMESITE = 'None'
-CSRF_COOKIE_HTTPONLY = True
-SESSION_COOKIE_HTTPONLY = True
-
-if dev_env == 'prod':
-  CSRF_COOKIE_SECURE = True
-  SESSION_COOKIE_SECURE = True
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
-
 AUTH_PASSWORD_VALIDATORS = [
   {
     'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',

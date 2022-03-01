@@ -5,53 +5,17 @@ from .models import User
 from django.views.decorators.csrf import ensure_csrf_cookie, csrf_protect, csrf_exempt
 from django.utils.decorators import method_decorator
 from django.contrib import auth
-from .serializers import UserSerializer
+from .serializers import UserSerializer, LogInSerializer
 
 
-@method_decorator(csrf_exempt, name='dispatch')
-class CheckAuthenticatedView(APIView):
-  def get(self, request, format=None):
-    # isAuthenticated = User.is_authenticated
-    ok = request.user.is_authenticated
-    # print(ok)
-    if ok:
-      return Response({'error': False, 'message': None, 'data': {'authenticated': True}})
-    else:
-      return Response({'error': False, 'message': None, 'data': {'authenticated': False}})
+# new
+from rest_framework_simplejwt.views import TokenObtainPairView
 
 
-class LogInView(APIView):
-  permission_classes = (permissions.AllowAny,)
-  def post(self, request, format=None):
-    data = request.data
-
-    missing = []
-    if 'username' not in data:
-      missing.append('username')
-    if 'password' not in data:
-      missing.append('password')
-        
-    if len(missing) > 0:
-      return Response({'error': True, 'message': ", ".join(missing) + " missing in json body", 'data': None})
-    
-    username = data['username']
-    password = data['password']
-    user = auth.authenticate(username=username, password=password)
-
-    if user is None:
-      return Response({'error': True, 'message': 'username or password is incorrect', 'data': None}, status=400)
-    else:
-      auth.login(request, user)
-      return Response({'error': False, 'message': 'login success', 'data': {'username': username}})
 
 
-class LogOutView(APIView):
-  def post(self, request, format=None):
-    try:
-      auth.logout(request)
-      return Response({'error': False, 'message': 'user logged out', 'data': None})
-    except:
-      return Response({'error': True, 'message': 'user could not be logged out', 'data': None})
+class LogInView(TokenObtainPairView): # new
+  serializer_class = LogInSerializer
 
 
 class UserInfoView(APIView):

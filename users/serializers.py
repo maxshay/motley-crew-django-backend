@@ -1,6 +1,9 @@
 from rest_framework import serializers
 from .models import User
 
+# new
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+
 class UserSerializer(serializers.ModelSerializer):
   firstName = serializers.CharField(source='first_name')
   lastName = serializers.CharField(source='last_name')
@@ -13,3 +16,14 @@ class UserSerializer(serializers.ModelSerializer):
   class Meta:
     model = User
     fields = ('id', 'username', 'email', 'firstName', 'lastName', 'dateJoined', 'lastLogin', 'isActive', 'isStaff', 'isSuperuser')
+
+
+class LogInSerializer(TokenObtainPairSerializer): # new
+  @classmethod
+  def get_token(cls, user):
+    token = super().get_token(user)
+    user_data = UserSerializer(user).data
+    for key, value in user_data.items():
+      if key != 'id':
+        token[key] = value
+    return token

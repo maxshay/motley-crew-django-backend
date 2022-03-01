@@ -29,11 +29,28 @@ class Folder(APIView):
   permission_classes = (permissions.IsAuthenticated,)
 
 
+  def put(self, request, id, format=None):
+    folder_name = request.data.get('folderName')
+
+    if folder_name is None: # add additional file name validations
+      return Response({'error': True, 'message': 'missing \'folderName\' from request body'}, status=400)
+    try:
+      f = FolderModel.objects.filter(id=id).first()
+      f.name = folder_name # update here
+      f.save()
+      f_ser = FolderSerializer(f)
+      return Response({'error': False, 'message': 'folder updated', 'data': f_ser.data})
+    except Exception as e:
+      print(e)
+      print('cannot get folder')
+      return Response({'error': True, 'message': 'cannot update folder', 'details': e})
+
+
   def get(self, request, id, format=None):
     try:
       f = FolderModel.objects.filter(id=id).first()
       if f is None:
-        return Response({'error': False, 'message': f'folder {id} not found, cannot delete'}, status=400)
+        return Response({'error': False, 'message': f'folder {id} not found, cannot get'}, status=400)
       f_ser = FolderSerializer(f)
       return Response({'error': False, 'message': None, 'data': f_ser.data})
     except Exception as e:

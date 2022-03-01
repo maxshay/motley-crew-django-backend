@@ -12,7 +12,6 @@ from users.models import User
 # dev
 import logging
 
-
 class Folders(APIView):
   permission_classes = (permissions.IsAuthenticated,)
     

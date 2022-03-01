@@ -7,9 +7,7 @@ from users.models import User
 
 class File(models.Model):
   name = models.CharField(max_length=255)
-  # parent folder
-  # url = models
-  # photo = models.FileField()
+  file = models.FileField(null=True, upload_to='files')
 
   # belongs to: Folder
   parent_folder = models.ForeignKey(Folder, on_delete=models.CASCADE)

@@ -24,13 +24,13 @@ class File(APIView):
     try:
       f = FileModel.objects.filter(id=id, owner=user.id).first()
       if f is None:
-        return Response({'error': True, 'message': f'file {id} not found', 'data': None}, status=400)
+        return Response({'error': False, 'message': f'file {id} not found', 'data': None}, status=400)
       file_ser = FileSerializer(f)
       return Response({'error': False, 'data': file_ser.data})
     except Exception as e:
       print(e)
       print('cannot get file')
-      return Response({'error': False, 'message': 'cannot get file', 'details': e, 'data': None})
+      return Response({'error': True, 'message': 'cannot get file', 'details': e, 'data': None})
 
 
   def delete(self, request, id, format=None):
@@ -78,7 +78,7 @@ class Files(APIView):
     user = User.objects.get(id=user.id)
 
     # get all Folders from user
-    folders = Folder.objects.all().filter(user=user.id)
+    folders = Folder.objects.all().filter(owner=user.id)
     folders = FolderSerializer(folders, many=True)
     folders = folders.data
 
@@ -88,7 +88,7 @@ class Files(APIView):
       files_in_folder = FileModel.objects.filter(parent_folder=f['id'], owner=user.id)
       files_in_folder = FileSerializer(files_in_folder, many=True)
       files_in_folder = files_in_folder.data
-      folders_data.append({'folderName': f['name'], 'folderOwner': f['user'], 'files': files_in_folder})
+      folders_data.append({'folderName': f['name'], 'folderOwner': f['owner'], 'files': files_in_folder})
 
     return Response({'error': False, 'data': folders_data})
 

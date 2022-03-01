@@ -29,8 +29,18 @@ class Folder(APIView):
   permission_classes = (permissions.IsAuthenticated,)
 
 
-  def get(self, request, format=None):
-    pass
+  def get(self, request, id, format=None):
+    try:
+      f = FolderModel.objects.filter(id=id).first()
+      if f is None:
+        return Response({'error': False, 'message': f'folder {id} not found, cannot delete'}, status=400)
+      f_ser = FolderSerializer(f)
+      return Response({'error': False, 'message': None, 'data': f_ser.data})
+    except Exception as e:
+      print(e)
+      print('cannot get folder')
+      return Response({'error': True, 'message': 'cannot get folder', 'details': e})
+
 
   def delete(self, request, id, format=None):
 

@@ -12,7 +12,7 @@ from users.models import User
 from folders.models import Folder
 from folders.serializers import FolderSerializer
 
-
+# think of these as controllers
 # Create your views here.
 class File(APIView):
   permission_classes = (permissions.IsAuthenticated,)

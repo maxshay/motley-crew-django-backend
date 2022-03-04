@@ -1,6 +1,6 @@
 activate virtual env:
-  .\venv\Scripts\activate
-  source venv/bin/activate
+  .\env\Scripts\activate
+  source env/bin/activate
 
 run app (dev);
   python manage.py runserver
@@ -20,22 +20,12 @@ reset all data:
 heroku redis cli:
   heroku redis:cli -a mcbackenddev --confirm mcbackenddev
 
+create new django app:
+  python manage.py createapp <Appname>
+
 resources:
   https://devcenter.heroku.com/articles/renaming-apps#updating-git-remotes
   https://testdriven.io/blog/django-custom-user-model/
   https://www.codingforentrepreneurs.com/blog/how-to-create-a-custom-django-user-model
   https://stackoverflow.com/questions/9736548/database-schema-how-the-relationship-can-be-designed-between-user-file-and-fol
   https://docs.djangoproject.com/en/4.0/ref/models/fields/
-
-
-
-curl https://mcbackenddev.herokuapp.com/api/csrf_cookie
-
-curl \
--X POST \
--d "{}" \
---referer 127.0.0.1 \
---cookie "csrftoken=AFFh26POEMMWZXlra7Nki5gGONNf9ooxWRLosURqf9AU3rxXhetjbMxvpC3jHFmT" \
-https://mcbackenddev.herokuapp.com/api/auth/login \
---header "X-CSRFToken: AFFh26POEMMWZXlra7Nki5gGONNf9ooxWRLosURqf9AU3rxXhetjbMxvpC3jHFmT" \
---header "Content-type: application/json"

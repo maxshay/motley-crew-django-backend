@@ -30,7 +30,7 @@ class Folder(APIView):
 
   # TODO: edit rest of attritubes
   def put(self, request, id, format=None):
-    folder_name = request.data.get('folderName')
+    request_data = request.data
 
     if folder_name is None: # add additional file name validations
       return Response({'error': True, 'message': 'missing \'folderName\' from request body'}, status=400)
@@ -86,15 +86,24 @@ class CreateFolder(APIView):
   def post(self, request, format=None):
     user = self.request.user
     data = self.request.data
+
     folder_name = data.get('folderName')
+    description = data.get('description')
+    color = data.get('color')
+    desired_completion_date = data.get('desiredCompletionDate')
+    expedited = data.get('expedited')
+    confidential = data.get('confidential')
 
     if folder_name is None:
       return Response({'error': True, 'message': 'missing \'folderName\' from request body'}, status=400)
 
 
+    # 'name', 'description', 'color', 'desiredCompletionDate', 'expedited', 'confidential'
+
+
     user = User.objects.get(id=user.id)
     try:
-      f = FolderModel.objects.create(name=folder_name, owner=user)
+      f = FolderModel.objects.create(name=folder_name, description=description, color=color, desired_completion_date=desired_completion_date, expedited=expedited, confidential=confidential,  owner=user)
       f_ser = FolderSerializer(f)
       return Response({'error': False, 'message': 'folder created', 'data': f_ser.data})
     except Exception as e:

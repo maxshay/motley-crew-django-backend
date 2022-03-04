@@ -102,6 +102,7 @@ class CreateFile(APIView):
   def post(self, request, format=None):
     user = self.request.user
     data = self.request.data
+    # file_data = self.request.files
 
     # TODO: get file from request
     file_name = data.get('fileName')
@@ -110,11 +111,13 @@ class CreateFile(APIView):
     if file_name is None or parent_folder_id is None:
       return Response({'error': True, 'message': 'missing \'fileName\' or \'parentFolderId\' from request body'}, status=400)
 
+    # file_data = self.request.files
+    # print(file_data)
 
     user = User.objects.get(id=user.id)
     folder = Folder.objects.filter(id=parent_folder_id, owner=user.id)
     try:
-      f = FileModel.objects.create(name=file_name, parent_folder=folder.id, owner=user.id)
+      f = FileModel.objects.create(name=file_name, parent_folder=folder.id, owner=user.id, file=file)
       f_ser = FileSerializer(f)
       return Response({'error': False, 'message': 'file created', 'data': f_ser.data})
     except Exception as e:

@@ -103,6 +103,7 @@ class CreateFile(APIView):
     user = self.request.user
     data = self.request.data
 
+    # TODO: get file from request
     file_name = data.get('fileName')
     parent_folder_id = data.get('parentFolderId')
 

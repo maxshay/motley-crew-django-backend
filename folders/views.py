@@ -28,6 +28,7 @@ class Folder(APIView):
   permission_classes = (permissions.IsAuthenticated,)
 
 
+  # TODO: edit rest of attritubes
   def put(self, request, id, format=None):
     folder_name = request.data.get('folderName')
 

@@ -21,7 +21,7 @@ heroku redis cli:
   heroku redis:cli -a mcbackenddev --confirm mcbackenddev
 
 create new django app:
-  python manage.py createapp <Appname>
+  python manage.py startapp <Appname>
 
 resources:
   https://devcenter.heroku.com/articles/renaming-apps#updating-git-remotes

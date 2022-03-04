@@ -51,6 +51,7 @@ INSTALLED_APPS = [
   'users',
   'folders',
   'files',
+  'route_slips'
 ]
 
 MIDDLEWARE = [

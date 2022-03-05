@@ -1,7 +1,7 @@
 from rest_framework.response import Response
 from rest_framework import generics, permissions
 
-from .permissions import IsOwner
+from motleycrew_backend.permissions import IsOwner
 from .serializers import FolderSerializer
 from .models import Folder as FolderModel
 from users.models import User as UserModel

@@ -1,15 +1,18 @@
+from django.http import Http404
 from rest_framework.views import APIView
-from rest_framework import permissions
+from rest_framework import permissions, generics
 from rest_framework.response import Response
 from django.views.decorators.csrf import ensure_csrf_cookie, csrf_protect, csrf_exempt
 from django.utils.decorators import method_decorator
+
 import json
 
 
-from .serializers import FileSerializer
+from .serializers import FileSerializer, CreateFileSerializer
 from .models import File as FileModel
 from users.models import User
-from folders.models import Folder
+from folders.models import Folder as FolderModel
+from motleycrew_backend.permissions import IsOwner
 from folders.serializers import FolderSerializer
 
 # think of these as controllers
@@ -78,7 +81,7 @@ class Files(APIView):
     user = User.objects.get(id=user.id)
 
     # get all Folders from user
-    folders = Folder.objects.all().filter(owner=user.id)
+    folders = FolderModel.objects.all().filter(owner=user.id)
     folders = FolderSerializer(folders, many=True)
     folders = folders.data
 
@@ -96,9 +99,31 @@ class Files(APIView):
     pass
 
 
-class CreateFile(APIView):
-  permission_classes = (permissions.IsAuthenticated,)
+class CreateFile(generics.CreateAPIView, ):
+  permission_classes = (IsOwner,)
+  serializer_class = CreateFileSerializer
+  queryset = FolderModel.objects.all()
+  # lookup_field = 'id'
 
+  # def get_serializer_context(self):
+  #   context = super().get_serializer_context()
+  #   context.update({'test': 'testing123'})
+  #   return context
+  def get_object(self):
+    try:
+
+      folder = FolderModel.objects.get(pk=self.kwargs.get('id'))
+    except FolderModel.DoesNotExist as e:
+      raise Http404
+    self.check_object_permissions(self.request, folder)
+    return folder
+
+  def perform_create(self, serializer):
+    parent_folder = self.get_object()
+    serializer.save(parent_folder=parent_folder)
+
+
+  """
   def post(self, request, format=None):
     user = self.request.user
     data = self.request.data
@@ -124,3 +149,4 @@ class CreateFile(APIView):
       print(e)
       print('cannot create file')
       return Response({'error': True, 'message': 'file cannot be created', 'details': e})
+  """

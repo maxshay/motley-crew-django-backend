@@ -1,114 +1,30 @@
-from rest_framework.views import APIView
-from rest_framework import permissions
 from rest_framework.response import Response
-from django.views.decorators.csrf import ensure_csrf_cookie, csrf_protect, csrf_exempt
-from django.utils.decorators import method_decorator
-import json
+from rest_framework import generics, permissions
 
+from .permissions import IsOwner
 from .serializers import FolderSerializer
 from .models import Folder as FolderModel
-from users.models import User
+from users.models import User as UserModel
 
 # dev
-import logging
+# import logging
 
-class Folders(APIView):
-  permission_classes = (permissions.IsAuthenticated,)
-    
-  def get(self, request, format=None):
+class Folders(generics.ListAPIView):
+  queryset = FolderModel.objects.all()
+  serializer_class = FolderSerializer
+
+  def get_queryset(self):
     user = self.request.user
-    user = User.objects.get(id=user.id)
-
-    folders = FolderModel.objects.all().filter(owner=user.id) # all
-    folder_info = FolderSerializer(folders, many=True)
-    return Response({'error': False, 'data': folder_info.data})
+    return FolderModel.objects.filter(owner=user)
 
 
-class Folder(APIView):
-  permission_classes = (permissions.IsAuthenticated,)
+class Folder(generics.RetrieveUpdateDestroyAPIView):
+  queryset = FolderModel.objects.all()
+  serializer_class = FolderSerializer
+  permission_classes = (IsOwner,)
+  lookup_field = 'id'
 
 
-  # TODO: edit rest of attritubes
-  def put(self, request, id, format=None):
-    request_data = request.data
-
-    if folder_name is None: # add additional file name validations
-      return Response({'error': True, 'message': 'missing \'folderName\' from request body'}, status=400)
-    try:
-      f = FolderModel.objects.filter(id=id).first()
-      f.name = folder_name # update here
-      f.save()
-      f_ser = FolderSerializer(f)
-      return Response({'error': False, 'message': 'folder updated', 'data': f_ser.data})
-    except Exception as e:
-      print(e)
-      print('cannot get folder')
-      return Response({'error': True, 'message': 'cannot update folder', 'details': e})
-
-
-  def get(self, request, id, format=None):
-    try:
-      f = FolderModel.objects.filter(id=id).first()
-      if f is None:
-        return Response({'error': False, 'message': f'folder {id} not found, cannot get'}, status=400)
-      f_ser = FolderSerializer(f)
-      return Response({'error': False, 'message': None, 'data': f_ser.data})
-    except Exception as e:
-      print(e)
-      print('cannot get folder')
-      return Response({'error': True, 'message': 'cannot get folder', 'details': e})
-
-
-  def delete(self, request, id, format=None):
-
-    if id is None:
-      return Response({'error': True, 'message': 'missing or invalid \'id\' from url params'}, status=400)
-    
-    try:
-      f = FolderModel.objects.filter(id=id).first()
-      if f is None:
-        return Response({'error': False, 'message': f'folder {id} not found, cannot delete'}, status=400)
-      f_id = f.id
-      f.delete()
-      f_ser = FolderSerializer(f)
-      f_temp = f_ser.data
-      f_temp['id'] = f_id
-      return Response({'error': False, 'message': 'folder deleted', 'data': f_temp})
-    except Exception as e:
-      print(e)
-      print('cannot delete folder')
-      return Response({'error': True, 'message': 'folder cannot be deleted', 'details': e})
-
-
-class CreateFolder(APIView):
-  permission_classes = (permissions.IsAuthenticated,)
-
-  def post(self, request, format=None):
-    user = self.request.user
-    data = self.request.data
-
-    folder_name = data.get('folderName')
-    description = data.get('description')
-    color = data.get('color')
-    desired_completion_date = data.get('desiredCompletionDate')
-    expedited = data.get('expedited')
-    confidential = data.get('confidential')
-
-    if folder_name is None:
-      return Response({'error': True, 'message': 'missing \'folderName\' from request body'}, status=400)
-
-
-    # 'name', 'description', 'color', 'desiredCompletionDate', 'expedited', 'confidential'
-
-
-    user = User.objects.get(id=user.id)
-    try:
-      f = FolderModel.objects.create(name=folder_name, description=description, color=color, desired_completion_date=desired_completion_date, expedited=expedited, confidential=confidential,  owner=user)
-      f_ser = FolderSerializer(f)
-      return Response({'error': False, 'message': 'folder created', 'data': f_ser.data})
-    except Exception as e:
-      print(e)
-      print('cannot create folder')
-      return Response({'error': True, 'message': 'folder cannot be created', 'details': e})
-
-
+class CreateFolder(generics.CreateAPIView):
+  permission_classes = (IsOwner,)
+  serializer_class = FolderSerializer

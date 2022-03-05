@@ -6,4 +6,4 @@ class FolderSerializer(serializers.ModelSerializer):
 
   class Meta:
     model = Folder
-    fields = ('name', 'description', 'color', 'desiredCompletionDate', 'expedited', 'confidential')
+    fields = ('id', 'name', 'description', 'color', 'desiredCompletionDate', 'expedited', 'confidential')

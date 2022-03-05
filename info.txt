@@ -24,6 +24,9 @@ heroku redis cli:
 create new django app:
   python manage.py startapp <Appname>
 
+git:
+  git fetch --all --prune
+
 resources:
   https://devcenter.heroku.com/articles/renaming-apps#updating-git-remotes
   https://testdriven.io/blog/django-custom-user-model/

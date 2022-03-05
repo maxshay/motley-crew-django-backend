@@ -19,7 +19,5 @@ urlpatterns = [
   path('csrf_cookie', GetCSRFToken.as_view()),
   path('auth/login', LogInView.as_view()),
   path('auth/token/verify', TokenVerifyView.as_view(), name='token_verify'),
-  path('auth/token/refresh', TokenRefreshView.as_view(), name='token_refresh'),
-  # path('auth/logout', LogOutView.as_view()),
-  # path('auth/loggedin', CheckAuthenticatedView.as_view()),
+  path('auth/token/refresh', TokenRefreshView.as_view(), name='token_refresh')
 ]

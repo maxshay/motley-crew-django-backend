@@ -18,14 +18,14 @@ class LogInView(TokenObtainPairView): # new
   serializer_class = LogInSerializer
 
 
-class User(generics.RetrieveAPIView):
+class User(generics.RetrieveUpdateAPIView):
   serializer_class = UserSerializer
   lookup_field = 'id'
 
-  def get_queryset(self):
+  def get_object(self):
     user = self.request.user
-    return UserModel.objects.filter(id=user.id)
-
+    user = UserModel.objects.get(id=user.id)
+    return user
 
 
 @method_decorator(ensure_csrf_cookie, name='dispatch')

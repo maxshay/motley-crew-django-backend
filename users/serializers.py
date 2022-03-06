@@ -5,18 +5,21 @@ from .models import User
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
 class UserSerializer(serializers.ModelSerializer):
-  firstName = serializers.CharField(source='first_name')
-  lastName = serializers.CharField(source='last_name')
-  dateJoined = serializers.DateTimeField(source='date_joined')
-  lastLogin = serializers.DateTimeField(source='last_login')
-  isActive = serializers.BooleanField(source='is_active')
-  isStaff = serializers.BooleanField(source='is_staff')
-  isSuperuser = serializers.BooleanField(source='is_superuser')
+  firstName = serializers.CharField(source='first_name', read_only=True)
+  lastName = serializers.CharField(source='last_name', read_only=True)
+  profileImage = serializers.CharField(source='profile_image')
+  dateJoined = serializers.DateTimeField(source='date_joined', read_only=True)
+  lastLogin = serializers.DateTimeField(source='last_login', read_only=True)
+  isActive = serializers.BooleanField(source='is_active', read_only=True)
+  isStaff = serializers.BooleanField(source='is_staff', read_only=True)
+  isSuperuser = serializers.BooleanField(source='is_superuser', read_only=True)
 
   class Meta:
     model = User
-    fields = ('id', 'username', 'email', 'firstName', 'lastName', 'dateJoined', 'lastLogin', 'isActive', 'isStaff', 'isSuperuser')
-
+    fields = ('id', 'username', 'email', 'firstName', 'lastName', 'dateJoined', 'lastLogin', 'isActive', 'isStaff', 'isSuperuser', 'profileImage')
+    extra_kwargs = {
+      'username': {'read_only': True}
+    }
 
 class LogInSerializer(TokenObtainPairSerializer):
   @classmethod

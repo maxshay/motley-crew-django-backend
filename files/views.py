@@ -4,19 +4,29 @@ from rest_framework import permissions, generics
 from rest_framework.response import Response
 from django.views.decorators.csrf import ensure_csrf_cookie, csrf_protect, csrf_exempt
 from django.utils.decorators import method_decorator
-
+from motleycrew_backend.permissions import IsOwner
 import json
 
-
-from .serializers import FileSerializer, CreateFileSerializer
+# models
 from .models import File as FileModel
 from users.models import User
 from folders.models import Folder as FolderModel
-from motleycrew_backend.permissions import IsOwner
+
+# serializers
+from .serializers import FileSerializer, CreateFileSerializer, FilesSerializer
 from folders.serializers import FolderSerializer
+
 
 # think of these as controllers
 # Create your views here.
+class File(generics.RetrieveDestroyAPIView):
+  permission_classes = (IsOwner,)
+  queryset = FileModel.objects.all()
+  serializer_class = FileSerializer
+  lookup_field = 'id'
+
+
+"""
 class File(APIView):
   permission_classes = (permissions.IsAuthenticated,)
 
@@ -71,8 +81,18 @@ class File(APIView):
     except Exception as e:
       print(e)
       return Response({'error': True, 'message': 'file cannot be updated', 'details': e})
+"""
+
+class Files(generics.ListAPIView):
+  serializer_class = FilesSerializer
+
+  def get_queryset(self):
+    user = self.request.user
+    return FolderModel.objects.filter(owner=user)
 
 
+
+"""
 class Files(APIView):
   permission_classes = (permissions.IsAuthenticated,)
 
@@ -97,9 +117,9 @@ class Files(APIView):
 
   def delete(self, request, format=None):
     pass
+"""
 
-
-class CreateFile(generics.CreateAPIView, ):
+class CreateFile(generics.CreateAPIView):
   permission_classes = (IsOwner,)
   serializer_class = CreateFileSerializer
   queryset = FolderModel.objects.all()

@@ -2,6 +2,8 @@ from django.db import models
 from folders.models import Folder
 # from users.models import User
 # Create your models here.
+
+# need 'is_archived'
 class RouteSlip(models.Model):
   class OrderTypes(models.TextChoices):
     IN_ORDER = 'in_order'

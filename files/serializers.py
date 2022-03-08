@@ -28,12 +28,16 @@ class FilesSerializer(serializers.ModelSerializer):
     # depth = 1
 
 
+# TODO: file name to model name
+# TODO: file type checking
 class CreateFileSerializer(serializers.ModelSerializer):
   owner = serializers.HiddenField(
     default=serializers.CurrentUserDefault()
   )
+  parentFolder = serializers.PrimaryKeyRelatedField(source='parent_folder', read_only=True)
+
 
   class Meta:
     model = File
-    fields = ('id', 'parent_folder', 'name', 'owner', 'file')
-    read_only_fields = ('parent_folder',)
+    fields = ('id', 'parentFolder', 'name', 'owner', 'file')
+    read_only_fields = ('parentFolder',)

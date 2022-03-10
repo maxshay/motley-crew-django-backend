@@ -7,6 +7,7 @@ class Folder(models.Model):
 
   description = models.CharField(max_length=255, null=True)
   color = models.CharField(max_length=16, null=True)
+  # make this required, not automatic default
   desired_completion_date = models.DateTimeField(default=datetime.now, blank=True, null=True)
   expedited = models.BooleanField(default=False)
   confidential = models.BooleanField(default=False)

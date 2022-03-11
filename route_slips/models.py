@@ -14,5 +14,6 @@ class RouteSlip(models.Model):
   complete = models.BooleanField(default=False)
   order_type = models.CharField(max_length=16, choices=OrderTypes.choices, null= True)
   current_id = models.IntegerField()
+  is_archived = models.BooleanField(default=False)
 
 

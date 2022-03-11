@@ -29,6 +29,27 @@ class Files(generics.ListAPIView):
     return FolderModel.objects.filter(owner=user)
 
 
+
+# TODO: get files for single folder
+class FolderFiles(generics.RetrieveAPIView):
+  permission_classes = (IsOwner,)
+  serializer_class = FilesSerializer
+
+  def get_object(self):
+    try:
+      folder = FolderModel.objects.get(pk=self.kwargs.get('id'))
+    except FolderModel.DoesNotExist as e:
+      raise Http404
+    self.check_object_permissions(self.request, folder)
+    return folder
+
+  def get_queryset(self):
+    user = self.request.user
+    return FolderModel.objects.filter(owner=user)
+
+
+
+
 class CreateFile(generics.CreateAPIView):
   permission_classes = (IsOwner,)
   serializer_class = CreateFileSerializer

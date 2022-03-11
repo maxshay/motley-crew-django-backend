@@ -33,8 +33,6 @@ class Folder(generics.RetrieveUpdateDestroyAPIView):
   """
 
 
-# TODO: get files for single folder
-
 class CreateFolder(generics.CreateAPIView):
   permission_classes = (IsOwner,)
   serializer_class = FolderSerializer

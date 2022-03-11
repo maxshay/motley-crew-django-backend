@@ -25,12 +25,10 @@ class Folder(generics.RetrieveUpdateDestroyAPIView):
   lookup_field = 'id'
 
   # TODO: create one route slip, with empty/defualt fields, on folder creation
-  """
   def perform_create(self, serializer):
     obj = serializer.save()
     print(obj.id)
 
-  """
 
 
 class CreateFolder(generics.CreateAPIView):

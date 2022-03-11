@@ -12,7 +12,7 @@ class RouteSlip(models.Model):
 
   folder_id = models.ForeignKey(Folder, on_delete=models.CASCADE)
   complete = models.BooleanField(default=False)
-  order_type = models.CharField(max_length=16, choices=OrderTypes.choices, null= True)
+  order_type = models.CharField(max_length=16, choices=OrderTypes.choices, null=True)
   current_id = models.IntegerField()
   is_archived = models.BooleanField(default=False)
 

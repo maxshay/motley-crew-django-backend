@@ -6,4 +6,5 @@ urlpatterns = [
   path('api/', include('users.urls')),
   path('api/', include('files.urls')),
   path('api/', include('folders.urls')),
+  path('api/', include('route_slips.urls')),
 ]

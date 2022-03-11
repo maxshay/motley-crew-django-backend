@@ -1,11 +1,26 @@
 from rest_framework import serializers
 from .models import Folder
 
+from route_slips.models import RouteSlip
+
 class FolderSerializer(serializers.ModelSerializer):
   desiredCompletionDate = serializers.DateTimeField(source='desired_completion_date')
   owner = serializers.HiddenField(
     default=serializers.CurrentUserDefault()
   )
+
+  class RouteSlipTempSerializer(serializers.ModelSerializer):
+    class Meta:
+      model = RouteSlip
+      # exclude = ['model_a_field', ']
+
+  route_slip = RouteSlipTempSerializer()
+
+  def create(self, validated_data):
+    validated_data_route_slip = validated_data.pop('route_slip')
+    folder_instance = Folder.objects.create(**validated_data)
+    RouteSlip.objects.create(id=folder_instance, **model_b_data)
+    return folder_instance
 
   """
   def create(self, validated_data):

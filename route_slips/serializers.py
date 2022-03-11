@@ -4,6 +4,10 @@ from .models import RouteSlip
 
 class RouteSlipSerializer(serializers.ModelSerializer):
 
+  # owner = serializers.HiddenField(
+  #   default=serializers.CurrentUserDefault()
+  # )
+
   class Meta:
     model = RouteSlip
     fields = '__all__'

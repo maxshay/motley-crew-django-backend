@@ -9,17 +9,10 @@ class FolderSerializer(serializers.ModelSerializer):
     default=serializers.CurrentUserDefault()
   )
 
-  # class RouteSlipTempSerializer(serializers.ModelSerializer):
-  #   class Meta:
-  #     model = RouteSlip
-  #     # exclude = ['model_a_field', ']
-
-  # route_slip = RouteSlipTempSerializer()
-
   def create(self, validated_data):
-    # validated_data_route_slip = validated_data.pop('route_slip')
     folder_instance = Folder.objects.create(**validated_data)
-    RouteSlip.objects.create(folder_id=folder_instance)
+    # create empty route slip here
+    RouteSlip.objects.create(folder_id=folder_instance, owner=folder_instance.owner)
     return folder_instance
 
   """

@@ -27,9 +27,13 @@ class Folder(generics.RetrieveUpdateDestroyAPIView):
   # TODO: create one route slip, with empty/defualt fields, on folder creation
   """
   def perform_create(self, serializer):
-    pass
+    obj = serializer.save()
+    print(obj.id)
+
   """
 
+
+# TODO: get files for single folder
 
 class CreateFolder(generics.CreateAPIView):
   permission_classes = (IsOwner,)

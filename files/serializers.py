@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from django.db import IntegrityError
 from .models import File
 
 # models
@@ -36,6 +37,14 @@ class CreateFileSerializer(serializers.ModelSerializer):
   )
   parentFolder = serializers.PrimaryKeyRelatedField(source='parent_folder', read_only=True)
 
+  def create(self, validated_data):
+    try:
+      # validated_data['user'] = self.context['request'].user
+      # print(' > context:', self.context['request']).user
+      return super().create(validated_data)
+    except IntegrityError:
+      error_msg = {'error': 'file name already exists, or something else'}
+      raise serializers.ValidationError(error_msg)
 
   class Meta:
     model = File

@@ -13,9 +13,12 @@ from .models import User as UserModel
 from django.views.decorators.csrf import ensure_csrf_cookie
 
 
-
 class LogInView(TokenObtainPairView): # new
   serializer_class = LogInSerializer
+
+
+class UserSearch(generics.RetrieveAPIView):
+  serializer_class = UserSerializer
 
 
 class User(generics.RetrieveUpdateAPIView):

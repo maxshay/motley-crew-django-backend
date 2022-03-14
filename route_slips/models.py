@@ -9,6 +9,7 @@ class RouteSlip(models.Model):
     PARALLEL = 'parallel'
     BOTH = 'both'
 
+  
   folder_id = models.ForeignKey(Folder, on_delete=models.CASCADE)
   owner = models.ForeignKey(User, on_delete=models.CASCADE)
   complete = models.BooleanField(default=False)

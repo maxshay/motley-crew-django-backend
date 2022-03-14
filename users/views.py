@@ -5,6 +5,11 @@ from rest_framework.response import Response
 from django.utils.decorators import method_decorator
 from rest_framework_simplejwt.views import TokenObtainPairView
 
+# for search
+from django.contrib.postgres.search import TrigramWordSimilarity
+from django.db.models import Value as V
+from django.db.models.functions import Concat
+
 # serializer
 from .serializers import UserSerializer, LogInSerializer
 
@@ -17,8 +22,19 @@ class LogInView(TokenObtainPairView): # new
   serializer_class = LogInSerializer
 
 
-class UserSearch(generics.RetrieveAPIView):
-  serializer_class = UserSerializer
+class UserSearch(APIView):
+  def get(self, request, format=None):
+    query_string = self.request.query_params.get('query', None)
+    if query_string is None or query_string == "":
+      return Response({'query': ['must be non empty string']}, status=400)
+
+    users_data = UserModel.objects.annotate(
+      full_name=Concat('first_name', V(' '), 'last_name'),
+      similarity=TrigramWordSimilarity(query_string, 'full_name' ),
+    ).filter(similarity__gt=0.5).order_by('-similarity')
+    users_ser = UserSerializer(users_data, many=True)
+    # print(users_ser.data)
+    return Response({'users': users_ser.data})
 
 
 class User(generics.RetrieveUpdateAPIView):

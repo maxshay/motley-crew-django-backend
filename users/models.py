@@ -7,6 +7,7 @@ from .managers import UserManager
 class User(AbstractUser):
   is_active = models.BooleanField(default=True)
   profile_image = models.CharField(max_length=10, default='👤')
+  # full_name = models.CharField(max_length=255)
 
   objects = UserManager()
 

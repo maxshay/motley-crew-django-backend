@@ -14,7 +14,18 @@ from .serializers import RouteSlipSerializer
 # from .serializers import FileSerializer, CreateFileSerializer, FilesSerializer
 # from folders.serializers import FolderSerializer
 
-# Create your views here.
+
+# TODO: update the update method to allow reordering of receipients (RouteSlipItems)
+# TODO: add no-longer-able-to-modify field, check if route slip already started
+# TODO: ensure update rest of fields work
+class RouteSlip(generics.RetrieveUpdateDestroyAPIView):
+  permission_classes = (IsOwner,)
+  queryset = RouteSlipModel.objects.all()
+  serializer_class = RouteSlipSerializer
+  lookup_field = 'id'
+
+
+# TODO: add permission classes
 class RouteSlips(generics.ListAPIView):
   permission_classes = (permissions.AllowAny,)
   serializer_class = RouteSlipSerializer

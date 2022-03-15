@@ -66,3 +66,6 @@ class CreateFile(generics.CreateAPIView):
   def perform_create(self, serializer):
     parent_folder = self.get_object()
     serializer.save(parent_folder=parent_folder)
+
+#TODO need to add some name validation
+#TODO start adding more comments to help with future readability. 

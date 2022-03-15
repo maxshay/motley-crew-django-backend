@@ -34,3 +34,7 @@ class RouteSlips(generics.ListAPIView):
   # def get_queryset(self):
   #   user = self.request.user
   #   return FolderModel.objects.filter(owner=user)
+
+  #TODO add name validation for file accessing
+  #TODO add routeslip verification
+  #TODO add links between routeslip and folders

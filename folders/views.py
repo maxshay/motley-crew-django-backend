@@ -2,7 +2,7 @@ from rest_framework.response import Response
 from rest_framework import generics, permissions
 
 from motleycrew_backend.permissions import IsOwner
-from .serializers import FolderSerializer
+from .serializers import FolderSerializer, CreateFolderSerializer
 from .models import Folder as FolderModel
 from users.models import User as UserModel
 
@@ -24,7 +24,10 @@ class Folder(generics.RetrieveUpdateDestroyAPIView):
   permission_classes = (IsOwner,)
   lookup_field = 'id'
 
+  # def get_queryset(self):
+  #   return FolderModel.objects.all()
+
 
 class CreateFolder(generics.CreateAPIView):
   permission_classes = (IsOwner,)
-  serializer_class = FolderSerializer
+  serializer_class = CreateFolderSerializer

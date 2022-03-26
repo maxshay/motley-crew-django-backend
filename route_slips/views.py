@@ -7,10 +7,10 @@ from motleycrew_backend.permissions import IsOwner
 from .models import RouteSlip as RouteSlipModel
 # from .models import File as FileModel
 # from users.models import User
-# from folders.models import Folder as FolderModel
+from folders.models import Folder as FolderModel
 
 # serializers
-from .serializers import RouteSlipSerializer
+from .serializers import RouteSlipSerializer, CreateRouteSlipSerializer
 # from .serializers import FileSerializer, CreateFileSerializer, FilesSerializer
 # from folders.serializers import FolderSerializer
 
@@ -37,4 +37,21 @@ class RouteSlips(generics.ListAPIView):
 
   #TODO add name validation for file accessing
   #TODO add routeslip verification
-  #TODO add links between routeslip and folders
+
+
+class CreateRouteSlip(generics.CreateAPIView):
+  permission_classes = (IsOwner,)
+  serializer_class = CreateRouteSlipSerializer
+  queryset = FolderModel.objects.all()
+
+  def get_object(self):
+    try:
+      folder = FolderModel.objects.get(pk=self.kwargs.get('id'))
+    except FolderModel.DoesNotExist as e:
+      raise Http404
+    self.check_object_permissions(self.request, folder)
+    return folder
+
+  def perform_create(self, serializer):
+    parent_folder = self.get_object()
+    serializer.save(parent_folder=parent_folder)

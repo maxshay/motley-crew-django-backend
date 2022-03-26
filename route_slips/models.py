@@ -10,7 +10,7 @@ class RouteSlip(models.Model):
     BOTH = 'both'
 
   
-  folder_id = models.ForeignKey(Folder, on_delete=models.CASCADE)
+  folder_id = models.ForeignKey(Folder, on_delete=models.CASCADE, related_name='routeSlips')
   owner = models.ForeignKey(User, on_delete=models.CASCADE)
   complete = models.BooleanField(default=False)
   order_type = models.CharField(max_length=16, choices=OrderTypes.choices, null=True)

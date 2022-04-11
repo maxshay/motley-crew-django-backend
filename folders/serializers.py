@@ -6,12 +6,12 @@ from route_slips.serializers import RouteSlipSerializer, ActiveRouteSlipSerializ
 
 class FolderSerializer(serializers.ModelSerializer):
   desiredCompletionDate = serializers.DateTimeField(source='desired_completion_date')
-  routeSlips = ActiveRouteSlipSerializer(many=True)
+  routeSlips = ActiveRouteSlipSerializer(many=True, read_only=True)
  
   class Meta:
     model = Folder
     fields = ('id', 'name', 'description', 'color', 'desiredCompletionDate', 'expedited', 'confidential', 'owner', 'routeSlips')
-
+    read_only_fields = ('routeSlips', 'owner',)
 
 class CreateFolderSerializer(serializers.ModelSerializer):
   desiredCompletionDate = serializers.DateTimeField(source='desired_completion_date')

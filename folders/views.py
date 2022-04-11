@@ -19,9 +19,9 @@ class Folders(generics.ListAPIView):
 
 
 class Folder(generics.RetrieveUpdateDestroyAPIView):
+  permission_classes = (IsOwner,)
   queryset = FolderModel.objects.all()
   serializer_class = FolderSerializer
-  permission_classes = (IsOwner,)
   lookup_field = 'id'
 
   # def get_queryset(self):

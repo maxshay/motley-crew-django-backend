@@ -1,7 +1,10 @@
+from datetime import datetime
 from django.http import Http404
 from rest_framework import generics, permissions
+from rest_framework.views import APIView
 from rest_framework.response import Response
 from motleycrew_backend.permissions import IsOwner
+from django.shortcuts import get_object_or_404
 
 # models
 from .models import RouteSlip as RouteSlipModel
@@ -37,6 +40,27 @@ class RouteSlips(generics.ListAPIView):
 
   #TODO add name validation for file accessing
   #TODO add routeslip verification
+
+class FinalizeRouteSlip(APIView):
+  permission_classes = (IsOwner,)
+  serializer_class = RouteSlipSerializer
+  def put(self, request, id):
+
+    route_slip = get_object_or_404(RouteSlipModel, id=id)
+
+    # make sure request user is owner of route slip
+    self.check_object_permissions(self.request, route_slip)
+
+    if route_slip.route_start_time is not None:
+      return Response({'message': f'Route Slip {id} is already finalized and started'}, status=400)
+
+    route_slip.route_start_time = datetime.now()
+    route_slip.save()
+
+    # TODO: notify first assignees
+
+    route_slip_serialized = RouteItemSerializer(route_slip)
+    return Response({'ok': 'nice', 'data': route_slip_serialized.data })
 
 
 class CreateRouteSlip(generics.CreateAPIView):

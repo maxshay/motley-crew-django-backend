@@ -17,6 +17,8 @@ class UserSerializer(serializers.ModelSerializer):
   isStaff = serializers.BooleanField(source='is_staff', read_only=True)
   isSuperuser = serializers.BooleanField(source='is_superuser', read_only=True)
 
+  managerId = serializers.IntegerField(source='manager_id', read_only=True)
+
   def get_user_full_name(self, obj):
     # print(obj.first_name, obj.last_name)
     # request = self.context['request']
@@ -26,7 +28,7 @@ class UserSerializer(serializers.ModelSerializer):
 
   class Meta:
     model = User
-    fields = ('id', 'username', 'email', 'firstName', 'lastName', 'fullName', 'dateJoined', 'lastLogin', 'isActive', 'isStaff', 'isSuperuser', 'profileImage')
+    fields = ('id', 'username', 'email', 'firstName', 'lastName', 'fullName', 'dateJoined', 'lastLogin', 'isActive', 'isStaff', 'isSuperuser', 'profileImage', 'managerId')
     extra_kwargs = {
       'username': {'read_only': True}
     }

@@ -1,3 +1,4 @@
+
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 
@@ -7,7 +8,7 @@ from .managers import UserManager
 class User(AbstractUser):
   is_active = models.BooleanField(default=True)
   profile_image = models.CharField(max_length=10, default='👤')
-  # full_name = models.CharField(max_length=255)
+  manager_id = models.IntegerField(null=True)
 
   objects = UserManager()
 

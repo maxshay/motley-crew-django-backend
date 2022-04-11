@@ -51,7 +51,9 @@ INSTALLED_APPS = [
   'users',
   'folders',
   'files',
-  'route_slips'
+  'route_slips',
+  'route_items',
+  'messages.apps.MessagesConfig'
 ]
 
 MIDDLEWARE = [

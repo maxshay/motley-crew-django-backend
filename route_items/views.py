@@ -35,9 +35,7 @@ class ModifyRouteItem(generics.UpdateAPIView):
     route_item = get_object_or_404(RouteItemModel, id=self.kwargs.get('route_item_id'))
     return route_slip
 
-
   # check if route slip is started before making changes
-
   
   # def perform_update(self, serializer):
   #   serializer.save()

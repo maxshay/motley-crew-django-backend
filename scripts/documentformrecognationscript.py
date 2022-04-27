@@ -12,7 +12,6 @@ from pytesseract import Output
 
 def scan():
   field_array = np.array([(0,0,0,0,0,0)])
-
   pdfimages = convert_from_path('./HRD-213.pdf')
   num_pages = len(pdfimages)
 
@@ -100,10 +99,12 @@ def scan():
 
       #Check for horizontal lines
       if(np.absolute(angle) <= 10):
+
         #Add horizontal lines to array
         horiz_lines = np.concatenate((horiz_lines, [(x1,y1,x2,y2)]), axis=0)
 
     horiz_lines = np.delete(horiz_lines, [0], axis=0)
+
 
     #Read text from page
     d = pt.image_to_data(image_array, output_type=Output.DICT)
@@ -119,16 +120,30 @@ def scan():
         
         #Add to array of signature locations
         signature_locations = np.concatenate((signature_locations, [(x,y,w,h)]), axis=0)
-
     signature_locations = np.delete(signature_locations, [0], axis=0)
 
+    #Read text from page
+    d = pt.image_to_data(image_array, output_type=Output.DICT)
+    date_locations = np.array([(0,0,0,0)])
+    for l in range(0, len(d["text"])):
 
-    for x,y,w,h in signature_locations:
-      #Apply rectangle outline
-      cv2.rectangle(image_array,(x,y),(x+w,y+h),(255,255,0),2)
+      #Search for date identifiers in text
+      if(d["text"][l].upper() == "DATE"):
+        x = d["left"][l]
+        y = d["top"][l]
+        w = d["width"][l]
+        h = d["height"][l]
 
-    #Image.fromarray(image_array)
-
+        #Verify there's a corresponding signature field
+        has_signature = False
+        for x1, y1, h1, w1 in signature_locations:
+          if np.absolute(y-y1) < 10:
+            has_signature = True
+        
+        #Add to array of date locations
+        if has_signature == True:
+          date_locations = np.concatenate((date_locations, [(x,y,w,h)]), axis=0)
+    date_locations = np.delete(date_locations, [0], axis=0)
 
     #Search for viable signature lines based on signature identifiers
     signature_lines = np.array([(0,0,0,0)])
@@ -160,52 +175,126 @@ def scan():
       signature_lines = np.concatenate((signature_lines, closest_above, closest_below), axis=0)
     signature_lines = np.delete(signature_lines, [0], axis=0)
 
+    #Search for viable date lines based on date identifiers
+    date_lines = np.array([(0,0,0,0)])
+    for x,y,w,h in date_locations:
+      dist_above = 0
+      dist_below =  0
+      closest_above = np.empty([1,4])
+      closest_below = np.empty([1,4])
+
+      #Check for nearest lines
+      for x1,y1,x2,y2 in horiz_lines:
+        above = False
+        dist = y1-y
+
+        #Check if line is above or below
+        if(dist > 0):
+          above = True
+
+        #Check for closest line above
+        if(above == True and (dist_above == 0 or dist < dist_above)):
+          closest_above = [(x1,y1,x2,y2)]
+          dist_above = dist
+
+        #Check for closest line below
+        if(above == False and (dist_below == 0 or np.absolute(dist) < dist_below)):
+          closest_below = [(x1,y1,x2,y2)]
+          dist_below = np.absolute(dist)
+      #Save closest lines
+      date_lines = np.concatenate((date_lines, closest_above, closest_below), axis=0)
+    date_lines = np.delete(date_lines, [0], axis=0)
+
+
     #Find signature boxes from signature lines
     signature_boxes = np.array([(0,0,0,0)])
-    for l in range(0, len(signature_locations)):
+    for m in range(0, len(signature_locations)):
       #Get location and dimensions of signature identifier
-      loc =  signature_locations[l]
+      loc =  signature_locations[m]
       x = loc[0]
       y = loc[1]
       w = loc[2]
       h = loc[3]
-      for x1, y1, x2, y2 in signature_lines[(l*2):((l*2)+1)]:
+      for x1, y1, x2, y2 in signature_lines[(m*2):((m*2)+1)]:
         #Check above line for conflicts
+        conflict = False
         check_x = x+w
         check_y = y1-h
-        check_w = (x2-x1)//2-check_x
+        check_w = (x2+x1)//2-check_x
+        if check_w < 0:
+          check_w = x2-check_x
         check_h = h
-        #Create a cropped image with just the select box
-        crop_img = image_array[check_y:check_y+check_h, check_x:check_x+check_w]
-        #Read text from box
-        img_text = pt.image_to_string(crop_img)
         #Check for empty space
-        if not img_text.strip():
-          signature_boxes = np.concatenate((signature_boxes, [(check_x, check_y, check_w, check_h)]))
+        if not (check_y + check_h <= 0 or check_y+check_h > image_array.shape[1]) and not (check_x+check_w <= 0 or check_x+check_w > image_array.shape[0]):
+          #Create a cropped image with just the select box
+          crop_img = image_array[check_y:check_y+check_h, check_x:check_x+check_w]
+          #Read text from box
+          img_text = pt.image_to_string(crop_img)
+          conflict = img_text.strip()
+        #Set proper height for box
+        if(y1 > y):
+          rect_y = y1
+          rect_h = y-y1
+        else:
+          rect_y = y1-(y+h-y1)
+          rect_h = y1-rect_y
+        if not conflict:
+          signature_boxes = np.concatenate((signature_boxes, [(check_x, rect_y, check_w, rect_h)]))
     signature_boxes = np.delete(signature_boxes, [0], axis=0)
 
+    #Find date boxes from date lines
+    date_boxes = np.array([(0,0,0,0)])
+    for n in range(0, len(date_locations)):
+      #Get location and dimensions of date identifier
+      loc =  date_locations[n]
+      x = loc[0]
+      y = loc[1]
+      w = loc[2]
+      h = loc[3]
+      for x1, y1, x2, y2 in date_lines[(n*2):((n*2)+1)]:
+        #Check above line for conflicts
+        conflict = False
+        check_x = x+w
+        check_y = y1-h
+        check_w = (x2+x1)//2-check_x
+        if check_w < 0:
+          check_w = x2-check_x
+        check_h = h
+        #Check for empty space
+        if not (check_y + check_h <= 0 or check_y+check_h > image_array.shape[1]) and not (check_x+check_w <= 0 or check_x+check_w > image_array.shape[0]):
+          #Create a cropped image with just the select box
+          crop_img = image_array[check_y:check_y+check_h, check_x:check_x+check_w]
+          #Read text from box
+          img_text = pt.image_to_string(crop_img)
+          conflict = img_text.strip()
+        #Set proper height for box
+        if(y1 > y):
+          rect_y = y1
+          rect_h = y-y1
+        else:
+          rect_y = y1-(y+h-y1)
+          rect_h = y1-rect_y
+        if not conflict:
+          date_boxes = np.concatenate((date_boxes, [(check_x, rect_y, check_w, rect_h)]))
+    date_boxes = np.delete(date_boxes, [0], axis=0)
 
     #Draw and store signature boxes
     for x,y,w,h in signature_boxes:
-      #Apply rectangle outline
-      cv2.rectangle(image_array,(x,y),(x+w,y+h),(255,0,0),2)
-
       #Add signatures to return array
       field_array = np.concatenate((field_array, [(page, 0, x, y, w, h)]), axis=0)
-    #Image.fromarray(image_array)
-
 
     #Draw and store checkboxes
     for x,y,w,h,area in blankBoxes:
-      #Apply rectangle outline
-      cv2.rectangle(image_array,(x,y),(x+w,y+h),(0,255,0),2)
-
       #Add checkboxes to return array
       field_array = np.concatenate((field_array, [(page, 1, x, y, w, h)]), axis=0)
-    #Image.fromarray(image_array)
+
+    #Draw and store date boxes
+    for x,y,w,h in date_boxes:
+      #Add checkboxes to return array
+      field_array = np.concatenate((field_array, [(page, 2, x, y, w, h)]), axis=0)
 
   #Remove placeholder index
-  field_array = np.delete(field_array, [0], axis=0)
+  field_array[0] = np.array([image_array.shape[1], image_array.shape[0], 0, 0, 0, 0]]
 
   return field_array
 

@@ -112,7 +112,7 @@ def scan():
     for k in range(0, len(d["text"])):
 
       #Search for signature identifiers in text
-      if(d["text"][k].upper() == "SIGNATURE"):
+      if(d["text"][k].upper() == "SIGNATURE" or d["text"][i].upper() == "SIGNATURE:"):
         x = d["left"][k]
         y = d["top"][k]
         w = d["width"][k]
@@ -128,7 +128,7 @@ def scan():
     for l in range(0, len(d["text"])):
 
       #Search for date identifiers in text
-      if(d["text"][l].upper() == "DATE"):
+      if(d["text"][l].upper() == "DATE" or d["text"][i].upper() == "DATE:"):
         x = d["left"][l]
         y = d["top"][l]
         w = d["width"][l]

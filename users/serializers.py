@@ -4,6 +4,44 @@ from .models import User
 # new
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
+class PartialUserSerializer(serializers.ModelSerializer):
+  firstName = serializers.CharField(source='first_name', read_only=True)
+  lastName = serializers.CharField(source='last_name', read_only=True)
+  fullName = serializers.SerializerMethodField('get_user_full_name', read_only=True)
+  profileImage = serializers.CharField(source='profile_image')
+
+  def get_user_full_name(self, obj):
+    # print(obj.first_name, obj.last_name)
+    # request = self.context['request']
+    # user = request.user
+    name = obj.first_name + " " + obj.last_name
+    return name
+
+  class Meta:
+    model = User
+    fields = ('id', 'username', 'email', 'firstName', 'lastName', 'fullName', 'profileImage')
+
+
+
+
+class AssigneeSerializer(serializers.ModelSerializer):
+  firstName = serializers.CharField(source='first_name', read_only=True)
+  lastName = serializers.CharField(source='last_name', read_only=True)
+  fullName = serializers.SerializerMethodField('get_user_full_name', read_only=True)
+  profileImage = serializers.CharField(source='profile_image')
+
+  def get_user_full_name(self, obj):
+    # print(obj.first_name, obj.last_name)
+    # request = self.context['request']
+    # user = request.user
+    name = obj.first_name + " " + obj.last_name
+    return name
+
+  class Meta:
+    model = User
+    fields = ('id', 'username', 'email', 'firstName', 'lastName', 'fullName', 'profileImage')
+ 
+
 class UserSerializer(serializers.ModelSerializer):
   firstName = serializers.CharField(source='first_name', read_only=True)
   lastName = serializers.CharField(source='last_name', read_only=True)

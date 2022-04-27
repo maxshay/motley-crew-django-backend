@@ -20,6 +20,11 @@ class RouteSlip(models.Model):
   shared_with = models.JSONField(default=list)
   slug = models.UUIDField(default=uuid.uuid4, editable=False)
 
+  '''
+  file_ref = models.ForeignKey(File, on_delete=models.CASCADE)
+  
+  '''
+
   route_start_time = models.DateTimeField(null=True, blank=True)
   # TODO: route_restarted?
 

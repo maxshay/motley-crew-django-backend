@@ -7,7 +7,7 @@ from folders.models import Folder as FolderModel
 
 # serializers
 from folders.serializers import FolderSerializer
-from users.serializers import UserSerializer
+from users.serializers import UserSerializer, PartialUserSerializer
 
 class FileSerializer(serializers.ModelSerializer):
   parentFolder = serializers.PrimaryKeyRelatedField(source='parent_folder', read_only=True)
@@ -22,6 +22,7 @@ class FileSerializer(serializers.ModelSerializer):
 class FilesSerializer(serializers.ModelSerializer):
   desiredCompletionDate = serializers.DateTimeField(source='desired_completion_date')
   files = FileSerializer(source='file_set', many=True)
+  owner = PartialUserSerializer()
 
   class Meta:
     model = FolderModel
@@ -41,6 +42,10 @@ class CreateFileSerializer(serializers.ModelSerializer):
     try:
       # validated_data['user'] = self.context['request'].user
       # print(' > context:', self.context['request']).user
+      print(self.context['request'].FILES)
+      print(validated_data)
+
+      raise IntegrityError('Test error')
       return super().create(validated_data)
     except IntegrityError:
       error_msg = {'error': 'file name already exists, or something else'}

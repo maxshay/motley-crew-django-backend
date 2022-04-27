@@ -38,8 +38,8 @@ class RouteSlips(generics.ListAPIView):
   #   user = self.request.user
   #   return FolderModel.objects.filter(owner=user)
 
-  #TODO add name validation for file accessing
-  #TODO add routeslip verification
+  # TODO add name validation for file accessing
+  # TODO add routeslip verification
 
 class FinalizeRouteSlip(APIView):
   permission_classes = (IsOwner,)
@@ -58,7 +58,6 @@ class FinalizeRouteSlip(APIView):
     route_slip.save()
 
     # TODO: notify first assignees
-
     route_slip_serialized = RouteItemSerializer(route_slip)
     return Response({'ok': 'nice', 'data': route_slip_serialized.data })
 

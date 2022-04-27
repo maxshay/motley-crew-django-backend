@@ -10,15 +10,17 @@ from PIL import Image
 from numpy import *
 from pytesseract import Output
 
-def main():
+def scan():
   field_array = np.array([(0,0,0,0,0,0)])
+
   pdfimages = convert_from_path('./HRD-213.pdf')
   num_pages = len(pdfimages)
 
-  for page in range(num_pages):
+  for i in range(num_pages):
+    page = i
     # Save pages as images in the pdf
-    pdfimages[i].save('page'+ str(page) +'.jpg', 'JPEG')
-    image_array = cv2.imread('page'+ str(page) +'.jpg')
+    # pdfimages[i].save('page'+ str(i) +'.jpg', 'JPEG')
+    image_array = cv2.imread('page'+ str(i) +'.jpg')
 
     #Convert the image to grayscale
     gray_scale = cv2.cvtColor(image_array, cv2.COLOR_BGR2GRAY)
@@ -86,8 +88,8 @@ def main():
 
     #Remove vertical or irregularly angled lines from set of possible lines
     horiz_lines = np.array([(0,0,0,0)])
-    for i in range(0, len(lines)):
-      l = lines[i][0]
+    for j in range(0, len(lines)):
+      l = lines[j][0]
       x1 = l[0]
       y1 = l[1]
       x2 = l[2]
@@ -98,27 +100,26 @@ def main():
 
       #Check for horizontal lines
       if(np.absolute(angle) <= 10):
-
         #Add horizontal lines to array
         horiz_lines = np.concatenate((horiz_lines, [(x1,y1,x2,y2)]), axis=0)
 
     horiz_lines = np.delete(horiz_lines, [0], axis=0)
 
-
     #Read text from page
     d = pt.image_to_data(image_array, output_type=Output.DICT)
     signature_locations = np.array([(0,0,0,0)])
-    for i in range(0, len(d["text"])):
+    for k in range(0, len(d["text"])):
 
       #Search for signature identifiers in text
-      if(d["text"][i].upper() == "SIGNATURE"):
-        x = d["left"][i]
-        y = d["top"][i]
-        w = d["width"][i]
-        h = d["height"][i]
+      if(d["text"][k].upper() == "SIGNATURE"):
+        x = d["left"][k]
+        y = d["top"][k]
+        w = d["width"][k]
+        h = d["height"][k]
         
         #Add to array of signature locations
         signature_locations = np.concatenate((signature_locations, [(x,y,w,h)]), axis=0)
+
     signature_locations = np.delete(signature_locations, [0], axis=0)
 
 
@@ -159,17 +160,16 @@ def main():
       signature_lines = np.concatenate((signature_lines, closest_above, closest_below), axis=0)
     signature_lines = np.delete(signature_lines, [0], axis=0)
 
-
     #Find signature boxes from signature lines
     signature_boxes = np.array([(0,0,0,0)])
-    for i in range(0, len(signature_locations)):
+    for l in range(0, len(signature_locations)):
       #Get location and dimensions of signature identifier
-      loc =  signature_locations[i]
+      loc =  signature_locations[l]
       x = loc[0]
       y = loc[1]
       w = loc[2]
       h = loc[3]
-      for x1, y1, x2, y2 in signature_lines[(i*2):((i*2)+1)]:
+      for x1, y1, x2, y2 in signature_lines[(l*2):((l*2)+1)]:
         #Check above line for conflicts
         check_x = x+w
         check_y = y1-h
@@ -210,4 +210,4 @@ def main():
   return field_array
 
 if __name__ == '__main__':
-  main()
+  print(scan())

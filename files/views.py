@@ -12,6 +12,9 @@ from folders.models import Folder as FolderModel
 from .serializers import FileSerializer, CreateFileSerializer, FilesSerializer
 from folders.serializers import FolderSerializer
 
+# file scanner script
+from scripts.documentformrecognationscript import scan
+
 
 # think of these as controllers
 class File(generics.RetrieveDestroyAPIView):

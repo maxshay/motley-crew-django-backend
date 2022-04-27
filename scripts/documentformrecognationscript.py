@@ -253,6 +253,9 @@ def scan(contents):
         else:
           rect_y = y1-(y+h-y1)
           rect_h = y1-rect_y
+        if rect_h < 0:
+          rect_y = rect_y+rect_h
+          rect_h = np.absolute(rect_h)
         if not conflict:
           signature_boxes = np.concatenate((signature_boxes, [(check_x, rect_y, check_w, rect_h)]))
     signature_boxes = np.delete(signature_boxes, [0], axis=0)
@@ -289,6 +292,9 @@ def scan(contents):
         else:
           rect_y = y1-(y+h-y1)
           rect_h = y1-rect_y
+        if rect_h < 0:
+          rect_y = rect_y+rect_h
+          rect_h = np.absolute(rect_h)
         if not conflict:
           date_boxes = np.concatenate((date_boxes, [(check_x, rect_y, check_w, rect_h)]))
     date_boxes = np.delete(date_boxes, [0], axis=0)

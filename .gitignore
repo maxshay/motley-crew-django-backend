@@ -142,4 +142,5 @@ secrets.txt
 
 
 .DS_Store
-**/*/.jpg
+**/*/*.jpg
+*.jpg

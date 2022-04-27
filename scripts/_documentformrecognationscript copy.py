@@ -13,15 +13,15 @@ from pytesseract import Output
 
 def scan(contents):
   field_array = np.array([(0,0,0,0,0,0)])
-  #pdfimages = convert_from_path('std200.pdf')
+  # pdfimages = convert_from_path('./HRD-213.pdf')
   pdfimages = convert_from_bytes(contents)
   num_pages = len(pdfimages)
 
-  for page in range(num_pages):
-    
+  for i in range(num_pages):
+    page = i
     # Save pages as images in the pdf
-    pdfimages[page].save('page'+ str(page) +'.jpg', 'JPEG')
-    image_array = cv2.imread('page'+ str(page) +'.jpg')
+    pdfimages[i].save('page'+ str(i) +'.jpg', 'JPEG')
+    image_array = cv2.imread('page'+ str(i) +'.jpg')
 
     #Convert the image to grayscale
     gray_scale = cv2.cvtColor(image_array, cv2.COLOR_BGR2GRAY)
@@ -89,8 +89,8 @@ def scan(contents):
 
     #Remove vertical or irregularly angled lines from set of possible lines
     horiz_lines = np.array([(0,0,0,0)])
-    for i in range(0, len(lines)):
-      l = lines[i][0]
+    for j in range(0, len(lines)):
+      l = lines[j][0]
       x1 = l[0]
       y1 = l[1]
       x2 = l[2]
@@ -111,44 +111,31 @@ def scan(contents):
     #Read text from page
     d = pt.image_to_data(image_array, output_type=Output.DICT)
     signature_locations = np.array([(0,0,0,0)])
-    for i in range(0, len(d["text"])):
+    for k in range(0, len(d["text"])):
 
       #Search for signature identifiers in text
-      if(d["text"][i].upper() == "SIGNATURE"or d["text"][i].upper() == "SIGNATURE:"):
-        x = d["left"][i]
-        y = d["top"][i]
-        w = d["width"][i]
-        h = d["height"][i]
-
-        #Create a cropped image with just the select box
-        crop_img = image_array[y:y+h, x+w:x+(w*3)]
-        #Read text from box
-        img_text = pt.image_to_string(crop_img)
-        conflict = img_text.strip()
+      if(d["text"][k].upper() == "SIGNATURE"):
+        x = d["left"][k]
+        y = d["top"][k]
+        w = d["width"][k]
+        h = d["height"][k]
         
-        if not conflict:
-          signature_locations = np.concatenate((signature_locations, [(x,y,w,h)]), axis=0)
+        #Add to array of signature locations
+        signature_locations = np.concatenate((signature_locations, [(x,y,w,h)]), axis=0)
     signature_locations = np.delete(signature_locations, [0], axis=0)
 
-
+    #Read text from page
+    d = pt.image_to_data(image_array, output_type=Output.DICT)
     date_locations = np.array([(0,0,0,0)])
-    for i in range(0, len(d["text"])):
+    for l in range(0, len(d["text"])):
 
       #Search for date identifiers in text
-      if(d["text"][i].upper() == "DATE" or d["text"][i].upper() == "DATE:"):
-        x = d["left"][i]
-        y = d["top"][i]
-        w = d["width"][i]
-        h = d["height"][i]
+      if(d["text"][l].upper() == "DATE"):
+        x = d["left"][l]
+        y = d["top"][l]
+        w = d["width"][l]
+        h = d["height"][l]
 
-
-        #Create a cropped image with just the select box
-        crop_img = image_array[y:y+h, x+w:x+(w*3)]
-        #Read text from box
-        img_text = pt.image_to_string(crop_img)
-        conflict = img_text.strip()
-
-        
         #Verify there's a corresponding signature field
         has_signature = False
         for x1, y1, h1, w1 in signature_locations:
@@ -156,7 +143,7 @@ def scan(contents):
             has_signature = True
         
         #Add to array of date locations
-        if has_signature and not conflict:
+        if has_signature == True:
           date_locations = np.concatenate((date_locations, [(x,y,w,h)]), axis=0)
     date_locations = np.delete(date_locations, [0], axis=0)
 
@@ -223,14 +210,14 @@ def scan(contents):
 
     #Find signature boxes from signature lines
     signature_boxes = np.array([(0,0,0,0)])
-    for i in range(0, len(signature_locations)):
+    for m in range(0, len(signature_locations)):
       #Get location and dimensions of signature identifier
-      loc =  signature_locations[i]
+      loc =  signature_locations[m]
       x = loc[0]
       y = loc[1]
       w = loc[2]
       h = loc[3]
-      for x1, y1, x2, y2 in signature_lines[(i*2):((i*2)+1)]:
+      for x1, y1, x2, y2 in signature_lines[(m*2):((m*2)+1)]:
         #Check above line for conflicts
         conflict = False
         check_x = x+w
@@ -259,14 +246,14 @@ def scan(contents):
 
     #Find date boxes from date lines
     date_boxes = np.array([(0,0,0,0)])
-    for i in range(0, len(date_locations)):
+    for n in range(0, len(date_locations)):
       #Get location and dimensions of date identifier
-      loc =  date_locations[i]
+      loc =  date_locations[n]
       x = loc[0]
       y = loc[1]
       w = loc[2]
       h = loc[3]
-      for x1, y1, x2, y2 in date_lines[(i*2):((i*2)+1)]:
+      for x1, y1, x2, y2 in date_lines[(n*2):((n*2)+1)]:
         #Check above line for conflicts
         conflict = False
         check_x = x+w
@@ -298,6 +285,7 @@ def scan(contents):
       #Add signatures to return array
       field_array = np.concatenate((field_array, [(page, 0, x, y, w, h)]), axis=0)
 
+    '''
     #Draw and store checkboxes
     for x,y,w,h,area in blankBoxes:
       #Add checkboxes to return array
@@ -307,8 +295,9 @@ def scan(contents):
     for x,y,w,h in date_boxes:
       #Add checkboxes to return array
       field_array = np.concatenate((field_array, [(page, 2, x, y, w, h)]), axis=0)
-
-  #Replace placeholder index with image dimensions
+    '''
+    
+  #Remove placeholder index
   field_array[0] = np.array([image_array.shape[1], image_array.shape[0], 0, 0, 0, 0])
 
   return field_array

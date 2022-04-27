@@ -97,11 +97,19 @@ class CompleteRouteItem(APIView):
 
 
 
-class CreateRouteItem(generics.CreateAPIView):
-  # permission_classes = (IsOwner,)
-  serializer_class = CreateRouteItemSerializer
-  # queryset = RouteSlipModel.objects.all()
+class CreateRouteItem(APIView):
+  # serializer_class = CreateRouteItemSerializer
+  
+  def post(self, request, format=None):
+    body = request.data
 
+
+
+
+    return Response({'ok': 'hello'})
+
+
+  '''
   def get_object(self):
     try:
       slip = RouteSlipModel.objects.get(pk=self.kwargs.get('id'))
@@ -109,6 +117,7 @@ class CreateRouteItem(generics.CreateAPIView):
       raise Http404
     self.check_object_permissions(self.request, slip)
     return slip
+  
 
   # when adding new route item
   # check priority or step
@@ -119,4 +128,6 @@ class CreateRouteItem(generics.CreateAPIView):
   def perform_create(self, serializer):
     route_slip = self.get_object()
     serializer.save(route_slip_id=route_slip)
+
+  '''
 

@@ -1,6 +1,10 @@
+import urllib3
+import requests
 from django.http import Http404
 from rest_framework import generics
+from rest_framework.views import APIView
 from rest_framework.response import Response
+from django.shortcuts import get_object_or_404
 from motleycrew_backend.permissions import IsOwner
 
 # models
@@ -51,8 +55,6 @@ class FolderFiles(generics.RetrieveAPIView):
     return FolderModel.objects.filter(owner=user)
 
 
-
-
 class CreateFile(generics.CreateAPIView):
   permission_classes = (IsOwner,)
   serializer_class = CreateFileSerializer
@@ -70,10 +72,18 @@ class CreateFile(generics.CreateAPIView):
     parent_folder = self.get_object()
     serializer.save(parent_folder=parent_folder)
 
+
 #TODO need to add some name validation
 #TODO start adding more comments to help with future readability.
+class ScanFileTest(APIView):
+  def get(self, request, id, format=None):
 
-class CreateScanFileTest(generics.CreateAPIView):
+    f = get_object_or_404(FileModel, id=id)
+    contents = requests.get(f.file.url).content
+    arr = scan(contents)
+    print(arr)
+    return Response({'points': arr})
+  '''
   permission_classes = (IsOwner,)
   serializer_class = CreateFileSerializer
   queryset = FolderModel.objects.all()
@@ -94,3 +104,5 @@ class CreateScanFileTest(generics.CreateAPIView):
   def perform_create(self, serializer):
     parent_folder = self.get_object()
     serializer.save(parent_folder=parent_folder)
+
+  '''

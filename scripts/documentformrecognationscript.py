@@ -3,22 +3,24 @@ import os
 import cv2
 import numpy as np
 import PIL
+import urllib3
 import pytesseract as pt
 
-from pdf2image import convert_from_path
+from pdf2image import convert_from_path, convert_from_bytes
 from PIL import Image
 from numpy import *
 from pytesseract import Output
 
-def scan():
+def scan(contents):
   field_array = np.array([(0,0,0,0,0,0)])
-  pdfimages = convert_from_path('./HRD-213.pdf')
+  # pdfimages = convert_from_path('./HRD-213.pdf')
+  pdfimages = convert_from_bytes(contents)
   num_pages = len(pdfimages)
 
   for i in range(num_pages):
     page = i
     # Save pages as images in the pdf
-    # pdfimages[i].save('page'+ str(i) +'.jpg', 'JPEG')
+    pdfimages[i].save('page'+ str(i) +'.jpg', 'JPEG')
     image_array = cv2.imread('page'+ str(i) +'.jpg')
 
     #Convert the image to grayscale
@@ -283,6 +285,7 @@ def scan():
       #Add signatures to return array
       field_array = np.concatenate((field_array, [(page, 0, x, y, w, h)]), axis=0)
 
+    '''
     #Draw and store checkboxes
     for x,y,w,h,area in blankBoxes:
       #Add checkboxes to return array
@@ -292,11 +295,13 @@ def scan():
     for x,y,w,h in date_boxes:
       #Add checkboxes to return array
       field_array = np.concatenate((field_array, [(page, 2, x, y, w, h)]), axis=0)
-
+    '''
+    
   #Remove placeholder index
-  field_array[0] = np.array([image_array.shape[1], image_array.shape[0], 0, 0, 0, 0]]
+  field_array[0] = np.array([image_array.shape[1], image_array.shape[0], 0, 0, 0, 0])
 
   return field_array
 
 if __name__ == '__main__':
-  print(scan())
+  ret = scan()
+  print(ret)

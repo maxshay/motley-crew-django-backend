@@ -1,0 +1,5 @@
+def scan(contents):
+  field_array = np.array([(0,0,0,0,0,0)])
+  # pdfimages = convert_from_path('./HRD-213.pdf')
+  pdfimages = convert_from_bytes(contents)
+  num_pages = len(pdfimages)

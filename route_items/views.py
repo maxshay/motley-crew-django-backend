@@ -2,6 +2,7 @@ from datetime import datetime
 from django.http import Http404
 from django.shortcuts import render
 from rest_framework import generics
+from rest_framework import permissions
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
@@ -15,7 +16,8 @@ from motleycrew_backend.permissions import IsAssignee, IsOwner
 
 # for getting, can be route slip owner or route item assignee
 class RouteItem(generics.RetrieveAPIView):
-  permission_classes = (IsAssignee, IsOwner)
+  # permission_classes = (IsAssignee, IsOwner)
+  permission_classes = (permissions.AllowAny,)
   queryset = RouteItemModel.objects.all()
   serializer_class = RouteItemSerializer
   lookup_field = 'id'

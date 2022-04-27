@@ -36,7 +36,11 @@ if dev_env is None:
 
 DEBUG = dev_env == 'dev'
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'mcbackenddev.herokuapp.com']
+if DEBUG:
+  ALLOWED_HOSTS = ['*']
+else:
+
+  ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'mcbackenddev.herokuapp.com']
 
 # Application definition
 INSTALLED_APPS = [
@@ -53,6 +57,7 @@ INSTALLED_APPS = [
   'files',
   'route_slips',
   'route_items',
+  'form_fields',
   'messages.apps.MessagesConfig'
 ]
 

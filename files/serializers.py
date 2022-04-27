@@ -6,7 +6,6 @@ from .models import File
 from folders.models import Folder as FolderModel
 
 # serializers
-from folders.serializers import FolderSerializer
 from users.serializers import UserSerializer, PartialUserSerializer
 
 class FileSerializer(serializers.ModelSerializer):
@@ -15,8 +14,6 @@ class FileSerializer(serializers.ModelSerializer):
   class Meta:
     model = File
     fields = ('id', 'parentFolder', 'name', 'file', 'owner')
-
-
 
 
 class FilesSerializer(serializers.ModelSerializer):
@@ -42,13 +39,15 @@ class CreateFileSerializer(serializers.ModelSerializer):
     try:
       # validated_data['user'] = self.context['request'].user
       # print(' > context:', self.context['request']).user
-      print(self.context['request'].FILES)
+      f = self.context['request'].FILES
+      print(' > name', f['file'].name)
+      validated_data['name'] = f['file'].name
       print(validated_data)
-
-      raise IntegrityError('Test error')
+      # raise IntegrityError('Test error')
       return super().create(validated_data)
-    except IntegrityError:
-      error_msg = {'error': 'file name already exists, or something else'}
+    except IntegrityError as e:
+      error_msg = {'message': e}
+      print(' > ', e)
       raise serializers.ValidationError(error_msg)
 
   class Meta:

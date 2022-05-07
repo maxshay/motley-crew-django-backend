@@ -1,14 +1,16 @@
+import uuid
 from datetime import datetime
 from django.http import Http404
 from django.shortcuts import render
-from rest_framework import generics
-from rest_framework import permissions
+from rest_framework import generics, status, permissions
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
 
 
 from .models import RouteItem as RouteItemModel
+from files.models import File as FileModel
+from form_fields.serializers import FormFieldSerializer
 from route_slips.models import RouteSlip as RouteSlipModel
 from .serializers import RouteItemSerializer, CreateRouteItemSerializer
 
@@ -90,7 +92,6 @@ class CompleteRouteItem(APIView):
     # get route slip and assign next route time
     # notify all necessary recipients
 
-
     route_item_serialized = RouteItemSerializer(route_item)
     return Response(route_item_serialized.data)
 
@@ -100,34 +101,60 @@ class CompleteRouteItem(APIView):
 class CreateRouteItem(APIView):
   # serializer_class = CreateRouteItemSerializer
   
-  def post(self, request, format=None):
+  def post(self, request, id, format=None):
     body = request.data
 
+    # GETTING THE ROUTE SLIP AND THE FILE REFERENCE FROM THE REQUEST
+    try:
+      route_slip = RouteSlipModel.objects.get(id=id) # try to get the Route Slip reference
+      print(f'[DEBUG] > queue: {route_slip.route_items_queue}')
+    except RouteSlipModel.DoesNotExist:
+      msg = f'Route slip {id} Not found'
+      return Response({'detail': msg}, status=status.HTTP_404_NOT_FOUND)
+
+    file_id = body.get('fileId', None)
+    if file_id is None: return Response({'fileId': ['fileId is required']}, status=400)
+    
+    try:
+      file_instance = FileModel.objects.get(id=file_id) # try to get the File reference
+    except FileModel.DoesNotExist:
+      msg = f'File {file_id} Not found'
+      return Response({'detail': msg}, status=status.HTTP_404_NOT_FOUND)
 
 
+    form_fields = body.pop('formFields', None) # the form_fields before we send to the route item serializer
+    print(f'[DEBUG] > {form_fields=}')
 
+    # CREATING THE ROUTE ITEM HERE
+    body['orderNum'] = 234
+    body['route_slip_id'] = route_slip.id
+    body['file'] = file_instance.id
+    route_item_temp = CreateRouteItemSerializer(data=body)
+    print(f'[DEBUG] > valid={route_item_temp.is_valid(raise_exception=True)}')
+    print(f'[DEBUG] > {route_item_temp.validated_data=}')
+    route_item_created = route_item_temp.save() # save the route item
+
+    # return Response({'message': 'remove me'})
+    # HERE WE'RE CREATING THE FORM FIELDS FOR THE FILE AND THE ROUTE ITEM
+    if not form_fields or len(form_fields) < 1:
+      return Response({'formFields': ['Must be atleast one form field attached to a route item']})
+
+    # for each form field,
+    form_fields_serialized = []
+    for form_field in form_fields:
+      form_field['file'] = file_instance.id # attaching file
+      form_field['route_item'] = route_item_created.id # attaching route item
+      f = FormFieldSerializer(data=form_field) # creating
+      form_fields_serialized.append(FormFieldSerializer(data=form_field)) # adding to temp list
+
+
+    for f in form_fields_serialized:
+      f.is_valid(raise_exception=True)
+      f.save() # save it
+
+    # HERE WE APPEND THE ROUTE ITEM TO THE ROUTE SLIP QUEUE
+    route_slip.route_items_queue.append(route_item_created.id)
+    route_slip.save()
     return Response({'ok': 'hello'})
 
-
-  '''
-  def get_object(self):
-    try:
-      slip = RouteSlipModel.objects.get(pk=self.kwargs.get('id'))
-    except RouteSlipModel.DoesNotExist as e:
-      raise Http404
-    self.check_object_permissions(self.request, slip)
-    return slip
-  
-
-  # when adding new route item
-  # check priority or step
-  # add file/folder permissions to file
-  # add to list of shared
-  # else?
-
-  def perform_create(self, serializer):
-    route_slip = self.get_object()
-    serializer.save(route_slip_id=route_slip)
-
-  '''
 

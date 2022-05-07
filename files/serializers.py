@@ -7,8 +7,17 @@ from folders.models import Folder as FolderModel
 
 # serializers
 from users.serializers import UserSerializer, PartialUserSerializer
+from form_fields.serializers import FormFieldSerializer
 
 class FileSerializer(serializers.ModelSerializer):
+  parentFolder = serializers.PrimaryKeyRelatedField(source='parent_folder', read_only=True)
+  formFields = FormFieldSerializer(source='formfield_set', many=True)
+  class Meta:
+    model = File
+    fields = ('id', 'parentFolder', 'name', 'file', 'owner', 'formFields')
+
+
+class FileInRouteItemSerializer(serializers.ModelSerializer):
   parentFolder = serializers.PrimaryKeyRelatedField(source='parent_folder', read_only=True)
 
   class Meta:

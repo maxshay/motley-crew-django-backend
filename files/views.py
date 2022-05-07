@@ -26,7 +26,7 @@ class File(generics.RetrieveDestroyAPIView):
   queryset = FileModel.objects.all()
   serializer_class = FileSerializer
   lookup_field = 'id'
-  
+
 
 class Files(generics.ListAPIView):
   serializer_class = FilesSerializer

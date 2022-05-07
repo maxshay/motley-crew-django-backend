@@ -6,15 +6,10 @@ from users.models import User
 # https://stackoverflow.com/questions/9736548/database-schema-how-the-relationship-can-be-designed-between-user-file-and-fol
 # https://docs.djangoproject.com/en/4.0/ref/models/fields/
 
-def _generate_dummy_fields():
-  return [ 0, 1, 538, 241, 21, 23]
-
 
 class File(models.Model):
   name = models.CharField(max_length=255, blank=True)
   file = models.FileField(null=True, upload_to='files')
-  # width ?
-  # hight ?
 
   # belongs to: Folder
   parent_folder = models.ForeignKey(Folder, on_delete=models.CASCADE)

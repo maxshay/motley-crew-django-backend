@@ -3,6 +3,7 @@ import uuid
 from django.db import models
 from folders.models import Folder
 from users.models import User
+from django.contrib.postgres.fields import ArrayField
 
 class RouteSlip(models.Model):
   ORDERING_TYPE_CHIOCES = [
@@ -11,21 +12,23 @@ class RouteSlip(models.Model):
     ('BOTH', 'both'),
   ]
 
-  folder_id = models.ForeignKey(Folder, on_delete=models.CASCADE, related_name='routeSlips')
-  owner = models.ForeignKey(User, on_delete=models.CASCADE)
   complete = models.BooleanField(default=False)
   order_type = models.CharField(max_length=16, choices=ORDERING_TYPE_CHIOCES, default='IN_ORDER', blank=True)
-  current_route_item_id = models.IntegerField(null=True)
   is_archived = models.BooleanField(default=False)
   shared_with = models.JSONField(default=list)
   slug = models.UUIDField(default=uuid.uuid4, editable=False)
-
-  '''
-  file_ref = models.ForeignKey(File, on_delete=models.CASCADE)
-  
-  '''
-
   route_start_time = models.DateTimeField(null=True, blank=True)
-  # TODO: route_restarted?
+
+  current_route_item = models.UUIDField(null=True) # the id of the route item the route is currently on
+  route_items_queue = ArrayField(models.UUIDField(), default=list)
+
+  # belongs to a Folder
+  folder_id = models.ForeignKey(Folder, on_delete=models.CASCADE, related_name='routeSlips')
+
+  # belongs to a User
+  owner = models.ForeignKey(User, on_delete=models.CASCADE)
+
+
+
 
 

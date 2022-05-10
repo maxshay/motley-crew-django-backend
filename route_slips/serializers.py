@@ -19,13 +19,11 @@ class ActiveRouteSlipSerializer(serializers.ModelSerializer):
   routeItems = RouteItemSerializer(source='routeitem_set', many=True)
   routeItemsQueue = serializers.ListField(child=serializers.UUIDField(), source='route_items_queue')
   owner = serializers.StringRelatedField()
-
+  routeStartTime = serializers.DateField(source='route_start_time')
   class Meta:
     model = RouteSlip
     list_serializer_class = ActiveFilteredRouteSlipSerializer
-    fields = ('id', 'orderType',  'routeItemsQueue', 'currentRouteItem', 'folderId', 'isArchived', 'owner', 'routeItems')
-    read_only_fields = ('id', 'orderType', 'currentRouteItem', 'folderId', 'owner')
-    # exclude = ['model_a_field', ']
+    fields = ('id', 'orderType',  'routeItemsQueue', 'currentRouteItem', 'folderId', 'isArchived', 'owner', 'routeStartTime', 'routeItems')
 
 
 class RouteSlipSerializer(serializers.ModelSerializer):
@@ -36,6 +34,7 @@ class RouteSlipSerializer(serializers.ModelSerializer):
   folderId = serializers.StringRelatedField(source='folder_id')
   isArchived = serializers.BooleanField(source='is_archived')
 
+
   routeItems = RouteItemSerializer(source='routeitem_set', many=True)
   routeItemsQueue = serializers.ListField(child=serializers.UUIDField(), source='route_items_queue')
   owner = serializers.StringRelatedField()
@@ -43,13 +42,13 @@ class RouteSlipSerializer(serializers.ModelSerializer):
 
   class Meta:
     model = RouteSlip
-    fields = ('id', 'orderType',  'routeItemsQueue', 'currentRouteItem', 'folderId', 'isArchived', 'owner', 'routeItems')
-    # read_only_fields = ('id', 'orderType', 'currentRouteItemId', 'folderId', 'owner')
+    fields = ('id', 'orderType',  'routeItemsQueue', 'currentRouteItem', 'folderId', 'isArchived', 'owner',  'route_start_time', 'routeItems')
 
 
 class CreateRouteSlipSerializer(serializers.ModelSerializer):
+  # orderType = serializers.CharField(source='order_type')
+  # folderId = serializers.StringRelatedField(source='folder_id')
 
   class Meta:
     model = RouteSlip
-    fields = ('id', 'orderType', 'currentId', 'folderId', 'isArchived', 'owner')
-    read_only_fields = ('id', 'orderType', 'currentId', 'folderId', 'owner')
+    fields = '__all__'

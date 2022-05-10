@@ -2,41 +2,31 @@ from rest_framework import serializers
 from .models import Folder
 
 from route_slips.models import RouteSlip
-from route_slips.serializers import RouteSlipSerializer, ActiveRouteSlipSerializer
+from route_slips.serializers import CreateRouteSlipSerializer, RouteSlipSerializer
 
 class FolderSerializer(serializers.ModelSerializer):
-  desiredCompletionDate = serializers.DateTimeField(source='desired_completion_date')
-  routeSlips = ActiveRouteSlipSerializer(many=True, read_only=True)
+  desiredCompletionDate = serializers.DateTimeField(source='desired_completion_date', read_only=True)
+  routeSlips = RouteSlipSerializer(source='routeslip_set', many=True)
 
   class Meta:
     model = Folder
-    fields = ('id', 'name', 'description', 'color', 'desiredCompletionDate', 'expedited', 'confidential', 'owner', 'routeSlips')
-    read_only_fields = ('routeSlips', 'owner',)
+    fields = ('id', 'name', 'description', 'color', 'expedited', 'confidential', 'owner', 'desiredCompletionDate', 'routeSlips')
+  
 
 class CreateFolderSerializer(serializers.ModelSerializer):
   desiredCompletionDate = serializers.DateTimeField(source='desired_completion_date')
   owner = serializers.HiddenField(
     default=serializers.CurrentUserDefault()
   )
-  """
-  def create(self, validated_data):
-    # return Snippet.objects.create(**validated_data)
-    group_data = validated_data.pop('group')
-    group, _ = Group.objects.get_or_create(name=group_data)
-    data = {
-      key: value for key, value in validated_data.items()
-      if key not in ('password1', 'password2')
-    }
-    data['password'] = validated_data['password1']
-    user = self.Meta.model.objects.create_user(**data)
-    user.groups.add(group)
-    user.save()
-    return user
-  """
+ 
   def create(self, validated_data):
     folder_instance = Folder.objects.create(**validated_data)
+    print(' > PASSED FOLDER')
     # create empty route slip here
-    RouteSlip.objects.create(folder_id=folder_instance, owner=folder_instance.owner)
+    body = {'folder_id': folder_instance.id, 'owner': folder_instance.owner.id, 'order_type': 'IN_ORDER'}
+    ri = CreateRouteSlipSerializer(data=body)
+    ri.is_valid(raise_exception=True)
+    ri.save()
     return folder_instance
 
   class Meta:

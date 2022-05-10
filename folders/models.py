@@ -7,7 +7,7 @@ class Folder(models.Model):
   name = models.CharField(max_length=255)
 
   description = models.CharField(max_length=255, null=True)
-  color = models.CharField(max_length=16, null=True)
+  color = models.CharField(max_length=16, default="ffffff")
 
   # TODO: make this required, not automatic default
   desired_completion_date = models.DateTimeField(default=datetime.now)

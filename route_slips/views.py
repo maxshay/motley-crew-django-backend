@@ -6,11 +6,16 @@ from rest_framework.response import Response
 from motleycrew_backend.permissions import IsOwner
 from django.shortcuts import get_object_or_404
 
+from messages.serializers import CreateMessageSerializer
+
 # models
 from .models import RouteSlip as RouteSlipModel
 # from .models import File as FileModel
 # from users.models import User
 from folders.models import Folder as FolderModel
+from route_items.models import RouteItem as RouteItemModel
+from messages.models import Message as MessageModel
+
 
 # serializers
 from .serializers import RouteSlipSerializer, CreateRouteSlipSerializer
@@ -18,9 +23,6 @@ from .serializers import RouteSlipSerializer, CreateRouteSlipSerializer
 # from folders.serializers import FolderSerializer
 
 
-# TODO: update the update method to allow reordering of receipients (RouteSlipItems)
-# TODO: add no-longer-able-to-modify field, check if route slip already started
-# TODO: ensure update rest of fields work
 class RouteSlip(generics.RetrieveUpdateDestroyAPIView):
   permission_classes = (IsOwner,)
   queryset = RouteSlipModel.objects.all()
@@ -42,24 +44,50 @@ class RouteSlips(generics.ListAPIView):
   # TODO add routeslip verification
 
 class FinalizeRouteSlip(APIView):
-  permission_classes = (IsOwner,)
+  permission_classes = (permissions.AllowAny,)
   serializer_class = RouteSlipSerializer
-  def put(self, request, id):
 
+  def post(self, request, id):
+    print(self.request.user)
     route_slip = get_object_or_404(RouteSlipModel, id=id)
 
-    # make sure request user is owner of route slip
-    self.check_object_permissions(self.request, route_slip)
-
+    if len(route_slip.route_items_queue) < 1:
+      return Response({'message': 'route slip must have atleast one route item'}, status=400)
     if route_slip.route_start_time is not None:
       return Response({'message': f'Route Slip {id} is already finalized and started'}, status=400)
 
+
+    # get first route item from route slip
+    # create pop from the queue
+    # assign route item to current route item
+    # get assignee and create a message
+
+    # TODO: notify first assignees
+    
+
+
+    next_route_item_id = route_slip.route_items_queue[0]
+    next_route_item = RouteItemModel.objects.get(id=next_route_item_id)
+    print(f'{next_route_item=}')
+    print(f'{next_route_item.assignee=}')
+
+    message_body = {
+      'message_type': 'notification',
+      'contents': 'Blah would like you to sign this',
+      'owner': next_route_item.assignee.id,
+      'file': next_route_item.file.id
+    }
+    message = CreateMessageSerializer(data=message_body)
+    message.is_valid(raise_exception=True)
+    print(f'{message.validated_data}')
+
+    message.save()
+
+    route_slip.current_route_item = next_route_item_id
     route_slip.route_start_time = datetime.now()
     route_slip.save()
 
-    # TODO: notify first assignees
-    route_slip_serialized = RouteItemSerializer(route_slip)
-    return Response({'ok': 'nice', 'data': route_slip_serialized.data })
+    return Response({'message': 'started'})
 
 
 class CreateRouteSlip(generics.CreateAPIView):

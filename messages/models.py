@@ -3,6 +3,8 @@ from datetime import datetime
 from django.db import models
 
 from users.models import User
+from files.models import File
+from route_items.models import RouteItem
 
 # Create your models here.
 class Message(models.Model):
@@ -10,6 +12,9 @@ class Message(models.Model):
   message_type = models.CharField(max_length=16) # notification, alert?, reminder?
   contents = models.CharField(max_length=255)
   read = models.BooleanField(default=False)
-  read_at = models.DateTimeField(null=True, blank=True)
-  created_at = models.DateTimeField(default=datetime.now, blank=True)
+  read_at = models.DateTimeField(null=True)
+  created_at = models.DateTimeField(default=datetime.now)
+
   owner = models.ForeignKey(User, on_delete=models.CASCADE)
+  file = models.ForeignKey(File, on_delete=models.DO_NOTHING)
+  route_item = models.ForeignKey(RouteItem, on_delete=models.DO_NOTHING)

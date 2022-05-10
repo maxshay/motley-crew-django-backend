@@ -13,7 +13,6 @@ class SortedRouteItemSerializer(serializers.ListSerializer):
     # data = data.filter(is_archived=False)
     return super(SortedRouteItemSerializer, self).to_representation(data)
 
-
 # get One
 class RouteItemSerializer(serializers.ModelSerializer):
   actionType = serializers.CharField(source='action_type')
@@ -22,12 +21,12 @@ class RouteItemSerializer(serializers.ModelSerializer):
   formFields = FormFieldSerializer(source='formfield_set', many=True)
   assignee = AssigneeSerializer()
   file = FileInRouteItemSerializer()
-
+  routeSlip = serializers.PrimaryKeyRelatedField(source='route_slip_id', read_only=True)
   # form field(s)
 
   class Meta:
     model = RouteItem
-    fields = ('id', 'assignee', 'actionType', 'orderNum', 'complete', 'comments', 'completedAt', 'file', 'formFields')
+    fields = ('id', 'assignee', 'actionType', 'orderNum', 'complete', 'comments', 'completedAt', 'routeSlip', 'file', 'formFields')
 
 
 def validate_action_type(value):

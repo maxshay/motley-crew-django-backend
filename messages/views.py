@@ -11,7 +11,7 @@ from .models import Message as MessageModel
 from .serializers import MessageSerializer
 
 # Create your views here.
-class Message(generics.RetrieveAPIView):
+class Message(generics.RetrieveDestroyAPIView):
   permission_classes = (IsOwner,)
   queryset = MessageModel.objects.all()
   serializer_class = MessageSerializer

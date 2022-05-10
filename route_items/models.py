@@ -21,17 +21,10 @@ class RouteItem(models.Model):
   completed_at = models.DateTimeField(null=True, default=None)
 
   # route slip has many route items
-  route_slip_id = models.ForeignKey(RouteSlip, on_delete=models.CASCADE)
+  route_slip = models.ForeignKey(RouteSlip, on_delete=models.CASCADE, null=True)
 
   # file has a route item
   file = models.ForeignKey(File, on_delete=models.CASCADE, null=True)
 
   # assignee has many route items
   assignee = models.ForeignKey(User, on_delete=models.CASCADE)
-
-  # image_ref
-  # image_step
-  # coord ref
-
-  # add this
-  # form_field = models.ForeignKey(FormFieldModel, on_delete=models.CASCADE, null=True)

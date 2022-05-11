@@ -45,7 +45,7 @@ class RouteSlips(generics.ListAPIView):
 
 class FinalizeRouteSlip(APIView):
   permission_classes = (permissions.AllowAny,)
-  serializer_class = RouteSlipSerializer
+  # serializer_class = RouteSlipSerializer
 
   def post(self, request, id):
     print(self.request.user)
@@ -56,30 +56,28 @@ class FinalizeRouteSlip(APIView):
     if route_slip.route_start_time is not None:
       return Response({'message': f'Route Slip {id} is already finalized and started'}, status=400)
 
-
     # get first route item from route slip
     # create pop from the queue
     # assign route item to current route item
     # get assignee and create a message
 
     # TODO: notify first assignees
-    
-
 
     next_route_item_id = route_slip.route_items_queue[0]
     next_route_item = RouteItemModel.objects.get(id=next_route_item_id)
-    print(f'{next_route_item=}')
-    print(f'{next_route_item.assignee=}')
+    # print(f'{next_route_item=}')
+    # print(f'{next_route_item.assignee=}')
 
     message_body = {
       'message_type': 'notification',
       'contents': 'Blah would like you to sign this',
       'owner': next_route_item.assignee.id,
-      'file': next_route_item.file.id
+      # 'file': next_route_item.file.id
+      'route_item': next_route_item.id
     }
     message = CreateMessageSerializer(data=message_body)
     message.is_valid(raise_exception=True)
-    print(f'{message.validated_data}')
+    # print(f'{message.validated_data}')
 
     message.save()
 
@@ -106,3 +104,18 @@ class CreateRouteSlip(generics.CreateAPIView):
   def perform_create(self, serializer):
     parent_folder = self.get_object()
     serializer.save(parent_folder=parent_folder)
+
+
+class NextRouteSlip(generics.CreateAPIView):
+  permission_classes = (permissions.AllowAny,)
+
+
+  def post(self, request, slip_id, item_id, format=None):
+
+    # get new file
+    # remove the first route item in queue
+    # get next route item in queue
+    # upload new file and attach to next route item
+    # maybe: update route slip, and formfields
+
+    return Response({'message': 'ok'})

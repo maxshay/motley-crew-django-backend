@@ -43,4 +43,4 @@ class CreateRouteItemSerializer(serializers.ModelSerializer):
 
   class Meta:
     model = RouteItem
-    fields = ('id', 'assignee', 'actionType', 'orderNum', 'complete', 'comments', 'route_slip_id', 'file', 'assignee')
+    fields = ('id', 'assignee', 'actionType', 'orderNum', 'complete', 'comments', 'route_slip', 'file', 'assignee')

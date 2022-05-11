@@ -21,9 +21,8 @@ class CreateFolderSerializer(serializers.ModelSerializer):
  
   def create(self, validated_data):
     folder_instance = Folder.objects.create(**validated_data)
-    print(' > PASSED FOLDER')
     # create empty route slip here
-    body = {'folder_id': folder_instance.id, 'owner': folder_instance.owner.id, 'order_type': 'IN_ORDER'}
+    body = {'folder_id': folder_instance.id, 'owner': folder_instance.owner.id}
     ri = CreateRouteSlipSerializer(data=body)
     ri.is_valid(raise_exception=True)
     ri.save()

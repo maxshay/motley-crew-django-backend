@@ -34,15 +34,15 @@ class RouteSlipSerializer(serializers.ModelSerializer):
   folderId = serializers.StringRelatedField(source='folder_id')
   isArchived = serializers.BooleanField(source='is_archived')
 
-
   routeItems = RouteItemSerializer(source='routeitem_set', many=True)
   routeItemsQueue = serializers.ListField(child=serializers.UUIDField(), source='route_items_queue')
   owner = serializers.StringRelatedField()
-  
 
+  routeStartTime = serializers.DateTimeField(source='route_start_time')
+  
   class Meta:
     model = RouteSlip
-    fields = ('id', 'orderType',  'routeItemsQueue', 'currentRouteItem', 'folderId', 'isArchived', 'owner',  'route_start_time', 'routeItems')
+    fields = ('id', 'orderType',  'routeItemsQueue', 'currentRouteItem', 'folderId', 'isArchived', 'owner',  'routeStartTime', 'routeItems')
 
 
 class CreateRouteSlipSerializer(serializers.ModelSerializer):

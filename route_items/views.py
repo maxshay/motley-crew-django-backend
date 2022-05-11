@@ -107,7 +107,7 @@ class CreateRouteItem(APIView):
     # GETTING THE ROUTE SLIP AND THE FILE REFERENCE FROM THE REQUEST
     try:
       route_slip = RouteSlipModel.objects.get(id=id) # try to get the Route Slip reference
-      print(f'[DEBUG] > queue: {route_slip.route_items_queue}')
+      # print(f'[DEBUG] > queue: {route_slip.route_items_queue}')
     except RouteSlipModel.DoesNotExist:
       msg = f'Route slip {id} Not found'
       return Response({'detail': msg}, status=status.HTTP_404_NOT_FOUND)
@@ -123,15 +123,15 @@ class CreateRouteItem(APIView):
 
 
     form_fields = body.pop('formFields', None) # the form_fields before we send to the route item serializer
-    print(f'[DEBUG] > {form_fields=}')
+    # print(f'[DEBUG] > {form_fields=}')
 
     # CREATING THE ROUTE ITEM HERE
     body['orderNum'] = 234
-    body['route_slip_id'] = route_slip.id
+    body['route_slip'] = route_slip.id
     body['file'] = file_instance.id
     route_item_temp = CreateRouteItemSerializer(data=body)
-    print(f'[DEBUG] > valid={route_item_temp.is_valid(raise_exception=True)}')
-    print(f'[DEBUG] > {route_item_temp.validated_data=}')
+    # print(f'[DEBUG] > valid={route_item_temp.is_valid(raise_exception=True)}')
+    # print(f'[DEBUG] > {route_item_temp.validated_data=}')
     route_item_created = route_item_temp.save() # save the route item
 
     # return Response({'message': 'remove me'})

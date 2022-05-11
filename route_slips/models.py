@@ -26,20 +26,3 @@ class RouteSlip(models.Model):
 
   # belongs to a User
   owner = models.ForeignKey(User, on_delete=models.CASCADE)
-
-# psycopg2.errors.NotNullViolation: null value in column "owner_id"    of relation "folders_folder"        violates not-null constraint
-# psycopg2.errors.NotNullViolation: null value in column "route_items" of relation "route_slips_routeslip" violates not-null constraint
-
-'''
-from route_items.models import RouteItem
-from folders.models import Folder
-from users.models import User
-from route_slips.models import RouteSlip
-
-f = Folder.objects.get(id=60)
-u = User.objects.get(id=4)
-rs = RouteSlip.objects.create(folder_id=f,owner=u)
-
-
-
-'''

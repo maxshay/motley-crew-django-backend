@@ -16,5 +16,4 @@ class Message(models.Model):
   created_at = models.DateTimeField(default=datetime.now)
 
   owner = models.ForeignKey(User, on_delete=models.CASCADE)
-  file = models.ForeignKey(File, on_delete=models.DO_NOTHING)
   route_item = models.ForeignKey(RouteItem, on_delete=models.DO_NOTHING)

@@ -113,9 +113,10 @@ class NextRouteSlip(generics.CreateAPIView):
   def post(self, request, slip_id, item_id, format=None):
 
     # get new file
+    # upload new file and attach to next route item
     # remove the first route item in queue
     # get next route item in queue
-    # upload new file and attach to next route item
+    # notify next route person
     # maybe: update route slip, and formfields
 
     return Response({'message': 'ok'})

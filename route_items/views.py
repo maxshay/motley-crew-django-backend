@@ -100,6 +100,7 @@ class CompleteRouteItem(APIView):
 
 class CreateRouteItem(APIView):
   # serializer_class = CreateRouteItemSerializer
+  permission_classes = (permissions.AllowAny,)
   
   def post(self, request, id, format=None):
     body = request.data
@@ -113,7 +114,8 @@ class CreateRouteItem(APIView):
       return Response({'detail': msg}, status=status.HTTP_404_NOT_FOUND)
 
     file_id = body.get('fileId', None)
-    if file_id is None: return Response({'fileId': ['fileId is required']}, status=400)
+    if file_id is None:
+      return Response({'fileId': ['fileId is required']}, status=400)
     
     try:
       file_instance = FileModel.objects.get(id=file_id) # try to get the File reference
@@ -132,6 +134,7 @@ class CreateRouteItem(APIView):
     route_item_temp = CreateRouteItemSerializer(data=body)
     # print(f'[DEBUG] > valid={route_item_temp.is_valid(raise_exception=True)}')
     # print(f'[DEBUG] > {route_item_temp.validated_data=}')
+    route_item_temp.is_valid(raise_exception=True)
     route_item_created = route_item_temp.save() # save the route item
 
     # return Response({'message': 'remove me'})

@@ -16,6 +16,8 @@ class FormField(models.Model):
   height = models.SmallIntegerField()
   xpos = models.SmallIntegerField()
   ypos = models.SmallIntegerField()
+  refw = models.SmallIntegerField(default=1000)
+  refh = models.SmallIntegerField(default=1000)
   # dimensions = ArrayField(models.IntegerField(), size=6, null=True)
 
   # file has many form fields

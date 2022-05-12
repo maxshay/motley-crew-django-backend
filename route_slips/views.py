@@ -19,6 +19,7 @@ from messages.models import Message as MessageModel
 
 # serializers
 from .serializers import RouteSlipSerializer, CreateRouteSlipSerializer
+from route_items.serializers import RouteItemSerializer
 # from .serializers import FileSerializer, CreateFileSerializer, FilesSerializer
 # from folders.serializers import FolderSerializer
 
@@ -107,7 +108,21 @@ class CreateRouteSlip(generics.CreateAPIView):
 
 
 class NextRouteSlip(generics.CreateAPIView):
-  permission_classes = (permissions.AllowAny,)
+  # permission_classes = (permissions.AllowAny,)
+
+
+  def get(self, request, slip_id, item_id, format=None):
+
+    route_slip = get_object_or_404(RouteSlipModel, id=slip_id)
+    assert(route_slip.route_items_queue[0] == route_slip.current_route_item)
+
+    next_route_item = get_object_or_404(RouteItemModel, id=route_slip.current_route_item)
+    if next_route_item.assignee.id != request.user.id:
+      return Response({'message': 'Its not your turn in the current route slip'})
+
+    next_ri_serialized = RouteItemSerializer(next_route_item)
+
+    return Response(next_ri_serialized.data)
 
 
   def post(self, request, slip_id, item_id, format=None):

@@ -4,7 +4,7 @@ activate virtual env:
   source env/bin/activate
 
 run app (dev);
-  python manage.py runserver
+  python manage.py  runserver
 
 make migrations:
   python manage.py makemigrations

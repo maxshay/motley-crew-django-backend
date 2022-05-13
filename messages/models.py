@@ -6,7 +6,6 @@ from users.models import User
 from files.models import File
 from route_items.models import RouteItem
 
-# Create your models here.
 class Message(models.Model):
   id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
   message_type = models.CharField(max_length=16) # notification, alert?, reminder?

@@ -7,6 +7,7 @@ from rest_framework.response import Response
 from motleycrew_backend.permissions import IsOwner
 
 from .models import Message as MessageModel
+from route_slips.models import RouteSlip as RouteSlipModel
 
 from .serializers import MessageSerializer
 
@@ -24,6 +25,17 @@ class Messages(generics.ListAPIView):
   def get_queryset(self):
     user = self.request.user
     return MessageModel.objects.filter(owner=user)
+
+
+class Notifications(APIView):
+  def get(self, request, format=None):
+    user = request.user
+    messages = MessageModel.objects.filter(owner=user)
+    count = 0
+    for m in messages:
+      if m.read is False:
+        count+=1
+    return Response({'count': count})
 
 
 class ReadMessage(APIView):

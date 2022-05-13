@@ -49,9 +49,9 @@ class CreateFileSerializer(serializers.ModelSerializer):
       # validated_data['user'] = self.context['request'].user
       # print(' > context:', self.context['request']).user
       f = self.context['request'].FILES
-      print(' > name', f['file'].name)
+      # print(' > f', f)
       validated_data['name'] = f['file'].name
-      print(validated_data)
+      # print(validated_data)
       # raise IntegrityError('Test error')
       return super().create(validated_data)
     except IntegrityError as e:

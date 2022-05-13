@@ -83,26 +83,3 @@ class ScanFileTest(APIView):
     arr = scan(contents)
     print(arr)
     return Response({'points': arr})
-  '''
-  permission_classes = (IsOwner,)
-  serializer_class = CreateFileSerializer
-  queryset = FolderModel.objects.all()
-
-  # Get folder 
-  # Get its route slip
-  # scan file, return points
-  # return data back to client to confirm
-
-  def get_object(self):
-    try:
-      folder = FolderModel.objects.get(pk=self.kwargs.get('id'))
-    except FolderModel.DoesNotExist as e:
-      raise Http404
-    self.check_object_permissions(self.request, folder)
-    return folder
-
-  def perform_create(self, serializer):
-    parent_folder = self.get_object()
-    serializer.save(parent_folder=parent_folder)
-
-  '''

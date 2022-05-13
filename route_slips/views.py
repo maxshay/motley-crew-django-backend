@@ -70,10 +70,9 @@ class FinalizeRouteSlip(APIView):
     # print(f'{next_route_item.assignee=}')
 
     message_body = {
-      'message_type': 'notification',
+      'message_type': 'request',
       'contents': 'Blah would like you to sign this',
       'owner': next_route_item.assignee.id,
-      # 'file': next_route_item.file.id
       'route_item': next_route_item.id
     }
     message = CreateMessageSerializer(data=message_body)
@@ -127,8 +126,16 @@ class NextRouteSlip(generics.CreateAPIView):
 
   def post(self, request, slip_id, item_id, format=None):
 
-    # get new file
+    f = self.request.FILES.get('file', None) # <MultiValueDict: {'file': [<InMemoryUploadedFile: HRD-2132.pdf (application/pdf)>]}>
+    if f is None:
+      return Response({'message': 'no file attached'}, status=400)
+
     # upload new file and attach to next route item
+    '''
+    route_slip = get_object_or_404(RouteSlipModel, id=slip_id)
+    route_item = get_object_or_404(RouteItemModel, id=item_id)
+    '''
+
     # remove the first route item in queue
     # get next route item in queue
     # notify next route person

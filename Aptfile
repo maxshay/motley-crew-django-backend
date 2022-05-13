@@ -3,4 +3,4 @@ libsm6
 libxext6
 poppler-utils
 tesseract-ocr
-libtesseract-dev
+tesseract-ocr-eng
